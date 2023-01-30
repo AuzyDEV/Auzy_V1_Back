@@ -22,13 +22,10 @@ const {
   updateUserpassword,
   ipMiddleware,
   getUserInfoswithIpAdress,
-  getAllMessages,
   deleteAllUsers,
-  getCountMessagesByUserId,
   blockUser,
   restoreUser,
   countUsers,
-  getCountMessages,
   signUp,
   getListUsers,
 } = require("../controllers/UserController");
@@ -57,7 +54,6 @@ router.get("/get", getListUsers);
 router.get("/getnumberofusers", function(req, res){
   countUsers(0).then(count => res.status(200).json({count: count}));
 });
-router.get("/numberofmessage", getCountMessages);
 // get user with email adress
 router.get("/user/:email", getUserwWithEmail);
 //get user infos : email & password
@@ -79,8 +75,6 @@ router.get("/users", getAllUsers);
 router.get("/user/:id", getUser);
 router.put("/user/:id", updateUser);
 router.delete("/user/:id", deleteUser);
-router.get("/msg/:idUser", getAllMessages);
-router.get("/nbr/:idUser", getCountMessagesByUserId);
 // block user
 router.put("/blocuser/:uid", blockUser);
 // restore user from blocked list

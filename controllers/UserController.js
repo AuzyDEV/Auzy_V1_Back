@@ -75,6 +75,7 @@ const updateUser = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 const deleteUser = async (req, res, next) => {
   try {
     console.log("Deleting user= %s", req.params.id);
@@ -94,8 +95,7 @@ const signUp = async (req, res, next) => {
        fireStore.collection("users").doc(user.uid)
     .set({
         ipadress: req.body.ipadress,
-      }
-      )
+      })
       getAuth()
       .updateUser(user.uid, {
         displayName: req.body.displayName,
@@ -266,7 +266,7 @@ const deleteAllUsers = (req, res) => {
     })
 };
 
-async function listAllUsers (req, res, next){
+async function listAllUsers (req, res, next) {
   const results = await getAuth().listUsers(1000);
   for (let i = 0; i < results.users.length; i++) {
     const user = results.users[i];
@@ -380,7 +380,7 @@ const getUserInfoswithIpAdress = async (req, res, next) => {
     res.status(400).json({ message: error.message});
   });
 };
-
+/*
 const getAllMessages = async (req, res, next) => {
   try {
     const idUser = req.params.idUser;
@@ -403,7 +403,7 @@ const getCountMessagesByUserId = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
-
+*/
 const blockUser = async (req, res, next) => {
   try {
     console.log("blocking user= %s", req.params.uid);
@@ -426,7 +426,7 @@ const restoreUser = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
-
+/*
 const getCountMessages = async (req, res, next) => {
   const users = await fireStore.collection(`chats/QMvFpTWIFrf7h79mWVr0mBhy6a72/messages`);
   const data = await users.get();
@@ -440,7 +440,7 @@ const getCountMessages = async (req, res, next) => {
         total = total + 1;
       });
     }
-};
+};*/
 
 module.exports = {
     addUser,
@@ -465,11 +465,8 @@ module.exports = {
     updateUserpassword,
     ipMiddleware,
     getUserInfoswithIpAdress,
-    getAllMessages,
     deleteAllUsers,
-    getCountMessagesByUserId,
     blockUser,
     restoreUser,
     countUsers,
-    getCountMessages
   }
