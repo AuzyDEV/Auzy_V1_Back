@@ -95,6 +95,7 @@ const signUp = async (req, res, next) => {
        fireStore.collection("users").doc(user.uid)
     .set({
         ipadress: req.body.ipadress,
+        role: "user"
       })
       getAuth()
       .updateUser(user.uid, {
@@ -199,7 +200,7 @@ const sendResetEmail = async (req, res, next) => {
 
 const sendVerificationEmail = async (req, res, next) => {
   const user = firebase.auth().currentUser;
-  console.log(user);
+  //console.log(user);
   user.sendEmailVerification().then(() => { 
     res.status(200).json({ message: "email adress confirmation send!" });
     }).catch((error) => {
@@ -235,6 +236,7 @@ const getListUsers = (req, res) => {
       res.status(400).json({ message: error.message});
     });
 };
+
 
  async function countUsers(count) {
   const listUsersResult = await getAuth().listUsers(1000);
@@ -301,6 +303,33 @@ const getUserInfos = async (req, res, next) => {
     // See the UserRecord reference doc for the contents of userRecord.
     res.status(200).json([userRecord]);
     console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
+  })
+  .catch((error) => {
+    res.status(400).json({ message: error.message});
+  });
+};
+
+const getUserRole = async (req, res, next) => {
+  console.log("Getting user role= %s", req.params.uid);
+  getAuth()
+  .getUser(req.params.uid)
+  .then(async (userRecord) => {
+    console.log("Getting user= %s", req.params.uid);
+    const user = await fireStore.collection("users").doc(req.params.uid);
+    const data = await user.get();
+    if (!data.exists) {
+      res.status(404).json({ message: "Record not found" });
+    } else {
+       const obj2 = JSON.parse(JSON.stringify(userRecord));
+      const obj3 = JSON.parse(JSON.stringify(data.data()));
+      const mergedObj = Object.assign(obj2,obj3);
+      
+      const jsonStr = JSON.stringify(mergedObj);
+      //console.log(JSON.parse(jsonStr)); 
+      const result = JSON.parse(jsonStr);
+      // See the UserRecord reference doc for the contents of userRecord.
+      res.status(200).json([result["role"]]);
+    }
   })
   .catch((error) => {
     res.status(400).json({ message: error.message});
@@ -441,6 +470,35 @@ const getCountMessages = async (req, res, next) => {
       });
     }
 };*/
+const getListofUsersWithRoleUser = async (req, res, next ) => {
+  getAuth().listUsers().then((listUsersResult) => {
+    const uids = listUsersResult.users.map((userRecord) => userRecord.uid);
+    const userDocsRef = fireStore.collection('users').where('role', '==', 'user');
+
+    const query = userDocsRef.where(firebasee.firestore.FieldPath.documentId(), 'in', uids);
+    query.get().then((querySnapshot) => {
+      const users = [];
+      querySnapshot.forEach((doc) => {
+        const userRecord = listUsersResult.users.find((user) => user.uid === doc.id);
+        if (userRecord) {
+          users.push({
+            uid: userRecord.uid,
+            email: userRecord.email,
+            displayName: userRecord.displayName,
+            photoURL: userRecord.photoURL,
+            // Add any other user properties you want to include here
+            ...doc.data()
+          });
+        }
+      })
+      res.json({users: users});
+    }).catch((error) => {
+      console.error(error);
+    });
+  }).catch((error) => {
+    console.error(error);
+  });
+}
 
 module.exports = {
     addUser,
@@ -469,4 +527,6 @@ module.exports = {
     blockUser,
     restoreUser,
     countUsers,
+    getUserRole,
+    getListofUsersWithRoleUser
   }

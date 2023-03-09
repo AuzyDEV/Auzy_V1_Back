@@ -7,8 +7,12 @@ const notifRoutes = require("./routes/notifRoutes");
 const filesRoutes = require("./routes/filesRoutes");
 const mailingRoutes = require("./routes/mailingRoutes");
 const messagingRoutes = require("./routes/messagingRoutes");
-const rateLimit = require('express-rate-limit')
-
+const rateLimit = require('express-rate-limit');
+const postsRoutes = require("./routes/postsRoutes");
+const savedPostRoutes = require("./routes/savedPostRoutes");
+const databaseRoutes = require("./routes/dataBaseRoutes");
+const sharedPostRoutes = require("./routes/sharedPostRoutes");
+const DataBaseCollectionRoutes = require("./routes/DataBaseCollection");
 var limiter = rateLimit({
   windowMs: 10 * 1000, // 10 seconds
   max: 15,
@@ -25,7 +29,11 @@ app.use("/api", notifRoutes.routes);
 app.use("/api", filesRoutes.routes);
 app.use("/api", mailingRoutes.routes);
 app.use("/api", messagingRoutes.routes);
-
+app.use("/api", postsRoutes.routes);
+app.use("/api", savedPostRoutes.routes);
+app.use("/api", databaseRoutes.routes);
+app.use("/api", sharedPostRoutes.routes);
+app.use("/api", DataBaseCollectionRoutes.routes);
 app.listen(config.port, () => {
   console.log("Service endpoint= %s", config.url);
 });

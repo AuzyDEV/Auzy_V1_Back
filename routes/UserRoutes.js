@@ -28,6 +28,8 @@ const {
   countUsers,
   signUp,
   getListUsers,
+  getUserRole,
+  getListofUsersWithRoleUser,
 } = require("../controllers/UserController");
  
 const router = express.Router();
@@ -79,6 +81,8 @@ router.delete("/user/:id", deleteUser);
 router.put("/blocuser/:uid", blockUser);
 // restore user from blocked list
 router.put("/restoreuser/:uid", restoreUser);
+router.get("/userole/:uid", getUserRole);
+router.get('/usersrole', getListofUsersWithRoleUser)
 
 module.exports = {
   routes: router

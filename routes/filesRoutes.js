@@ -6,8 +6,9 @@ const {
     addFile2, 
     downloadFile, 
     deleteFile, 
-    getkhra,
-    getOnefile} 
+    getOnefile,
+    deleteFileFromDownloadURLForMedecine,
+    deleteFileFromDownloadURLForPost} 
     = require("../controllers/fileController");
 
 const storage = multer.memoryStorage();
@@ -20,6 +21,8 @@ router.get("/downoaldfile", downloadFile);
 router.get("/getfile/:name", getOnefile);
 router.get("/files/:uid", getAllFiltedFilesByUserid);
 router.delete("/deletefile/:fileName", deleteFile);
+router.delete("/file", deleteFileFromDownloadURLForMedecine);
+router.delete("/filepost", deleteFileFromDownloadURLForPost);
 module.exports = {
     routes: router
   };
