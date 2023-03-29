@@ -6,7 +6,6 @@ const storagee = require('@google-cloud/storage');
 const storage = firebase.storage().ref();
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");
-let khra = [];
 
 const storageClient = new storagee.Storage();
 

@@ -1,5 +1,4 @@
 const firebase = require("../db");
-const Medecine = require("../models/medecine");
 const fireStore = firebase.firestore();
 const admin = require('firebase-admin');
 
@@ -81,6 +80,55 @@ const getOneDBWithFileDetails  = async (req, res, next)=> {
     //return JSON.stringify(response);
   
   }
+  const getAllDBWithSpecificAttribute = async (req, res, next) => {
+    const collectionName = req.params.collectionName;
+    const bucket = admin.storage().bucket();
+    fireStore.collection(collectionName).where("speciality", "==", req.params.speciality).get().then(snapshot => {
+     const ids = snapshot.docs.map(doc => doc.id);
+   
+     // Use the IDs to find the corresponding folders in Firebase Storage
+     const promises = ids.map(id => {
+       return fireStore.collection(collectionName).doc(id).get().then(doc => {
+         return {
+           id,
+           data: doc.data(),
+         };
+       }).then(docData => {
+         return bucket.getFiles({
+           prefix: `${collectionName}/${id}/`,
+         }).then(results => {
+           const filePromises = results[0].map(file => {
+             return file.getSignedUrl({
+               action: 'read',
+               expires: '03-17-2025',
+             }).then(signedUrls => {
+               return {name: file.name, downloadURL: signedUrls[0]};
+             });
+           });
+     
+           return Promise.all(filePromises).then(files => {
+             return {...docData, files};
+           });
+         });
+       });
+     });
+   
+     // Wait for all promises to resolve and return the results in a JSON file
+     Promise.all(promises).then(results => {
+       const data = {
+         listCollections: results,
+       };
+       if(results.length > 0) {
+         res.status(200).json(data)
+       }
+       else {
+         res.status(400).json(["erreur"])
+       }
+       //fs.writeFileSync('./res.json', JSON.stringify(data));
+     });
+   });
+   };
+  
 
 const getAllDB = async (req, res, next) => {
    const collectionName = req.params.collectionName;
@@ -136,5 +184,6 @@ const getAllDB = async (req, res, next) => {
     deleteDB,
     updateDB,
     getAllDB,
-    getOneDBWithFileDetails
+    getOneDBWithFileDetails,
+    getAllDBWithSpecificAttribute
     }

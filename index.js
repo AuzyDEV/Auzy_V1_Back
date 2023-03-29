@@ -10,7 +10,6 @@ const messagingRoutes = require("./routes/messagingRoutes");
 const rateLimit = require('express-rate-limit');
 const postsRoutes = require("./routes/postsRoutes");
 const savedPostRoutes = require("./routes/savedPostRoutes");
-const databaseRoutes = require("./routes/dataBaseRoutes");
 const sharedPostRoutes = require("./routes/sharedPostRoutes");
 const DataBaseCollectionRoutes = require("./routes/DataBaseCollection");
 var limiter = rateLimit({
@@ -31,7 +30,6 @@ app.use("/api", mailingRoutes.routes);
 app.use("/api", messagingRoutes.routes);
 app.use("/api", postsRoutes.routes);
 app.use("/api", savedPostRoutes.routes);
-app.use("/api", databaseRoutes.routes);
 app.use("/api", sharedPostRoutes.routes);
 app.use("/api", DataBaseCollectionRoutes.routes);
 app.listen(config.port, () => {
