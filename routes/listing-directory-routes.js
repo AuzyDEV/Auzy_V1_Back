@@ -1,5 +1,5 @@
 const express = require("express");
-const { addDB, deleteDB, updateDB, getAllDB, getOneDBWithFileDetails, getAllDBWithSpecificAttribute } = require("../controllers/DataBaseCollectionController");
+const { addDB, deleteDB, updateDB, getAllDB, getOneDBWithFileDetails, getAllDBWithSpecificAttribute } = require("../controllers/listing-directory-controller");
 const router = express.Router();
 
 router.post("/addDB", addDB);

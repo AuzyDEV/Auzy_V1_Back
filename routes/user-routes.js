@@ -1,5 +1,5 @@
 const express = require("express");
-const { sendMailOverHTTP } = require("../controllers/notificationsController");
+const { sendMailOverHTTP } = require("../controllers/notifications-controller");
 const {
   addUser,
   getAllUsers,
@@ -30,7 +30,7 @@ const {
   getListUsers,
   getUserRole,
   getListofUsersWithRoleUser,
-} = require("../controllers/UserController");
+} = require("../controllers/user-controller");
  
 const router = express.Router();
  

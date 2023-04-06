@@ -1,13 +1,13 @@
 const firebase = require("../db");
-const User  = require("../models/user");
+const User  = require("../models/user-model");
 const fireStore = firebase.firestore();
 const firebasee = require('firebase');
 const { getAuth, UserRecord } = require('firebase-admin/auth');
 const requestIp = require('request-ip');
-const Post = require("../models/post");
+const Post = require("../models/post-model");
 const { getFirestore } = require("firebase-admin/firestore");
 const { firestore } = require("firebase-admin");
-const savedPost = require("../models/savedPost");
+const savedPost = require("../models/saved-post-model");
 const admin = require('firebase-admin');
 let users = [];
 

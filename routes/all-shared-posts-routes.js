@@ -1,5 +1,5 @@
 const express = require("express");
-const { SharePost, getAllSharedPostsByCurrentUserId } = require("../controllers/SharedPostController");
+const { SharePost, getAllSharedPostsByCurrentUserId } = require("../controllers/share-posts-controller");
 const router = express.Router();
 
 router.post("/sharepost", SharePost);

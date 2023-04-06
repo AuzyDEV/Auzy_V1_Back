@@ -1,5 +1,5 @@
 const express = require("express");
-const { sendMailOverHTTP, sendBroadcastMailOverHTTP } = require("../controllers/mailingController");
+const { sendMailOverHTTP, sendBroadcastMailOverHTTP } = require("../controllers/mail-controller");
 
 const router = express.Router();
 

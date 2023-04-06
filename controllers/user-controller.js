@@ -1,5 +1,5 @@
 const firebase = require("../db");
-const User  = require("../models/user");
+const User  = require("../models/user-model");
 const fireStore = firebase.firestore();
 const firebasee = require('firebase');
 const { getAuth, UserRecord } = require('firebase-admin/auth');

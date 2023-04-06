@@ -1,9 +1,9 @@
 const express = require("express");
 const multer = require('multer');
-const { getAllFiltedFilesByUserid } = require("../controllers/fileController");
+const { getAllFiltedFilesByUserid } = require("../controllers/file-controller");
 const {
     sendNotification, 
-} = require("../controllers/notificationsController");
+} = require("../controllers/notifications-controller");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single('file');

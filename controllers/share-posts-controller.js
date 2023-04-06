@@ -1,5 +1,5 @@
 const firebase = require("../db");
-const sharedPost = require("../models/sharedPost");
+const sharedPost = require("../models/shared-post-model");
 const fireStore = firebase.firestore();
 
 const SharePost = async (req, res, next) => {

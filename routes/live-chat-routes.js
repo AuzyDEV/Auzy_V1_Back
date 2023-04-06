@@ -1,6 +1,6 @@
 const express = require("express");
-const { getAllMessages, getCountMessages, getCountMessagesByUserId } = require("../controllers/messagingController");
-const { sendMailOverHTTP } = require("../controllers/notificationsController");
+const { getAllMessages, getCountMessages, getCountMessagesByUserId } = require("../controllers/live-chat-controller");
+const { sendMailOverHTTP } = require("../controllers/notifications-controller");
 
 const router = express.Router();
 

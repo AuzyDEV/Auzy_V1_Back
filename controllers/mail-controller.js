@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const functions = require('firebase-functions')
 const firebase = require("../db");
-const { getAllUsersEmail } = require('./UserController');
+const { getAllUsersEmail } = require('./user-controller');
 const storage = firebase.storage().ref();
 const { getAuth, UserRecord } = require('firebase-admin/auth');
 require("firebase/storage");

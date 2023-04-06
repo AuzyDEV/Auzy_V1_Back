@@ -9,7 +9,7 @@ const { addPost,
   getOnePostWithFileDetails, 
   getSavedPostWithBoolAttributeAndTheirFiles,
   getpathOfPost, 
- } = require("../controllers/PostsController");
+ } = require("../controllers/all-posts-controller");
 const router = express.Router();
 
 router.post("/addpost", addPost);
