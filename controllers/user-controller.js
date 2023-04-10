@@ -9,7 +9,6 @@ let users = [];
 
 const addUser = async (req, res, next) => {
   try {
-    console.log("Adding new User");
     await fireStore.collection("users").doc(req.body.uid)
     .set({
         ipadress: req.body.ipadress,
@@ -156,7 +155,6 @@ const logout = async (req, res, next) => {
 
 const signInWithGoogle = async (req, res, next) => {
   var provider = new firebasee.auth.GoogleAuthProvider();
-  //firebase.auth().signInWIthCredential(firebase.auth.FacebookAuthProvider.credential(fbAccessToken))
   firebase.auth()
   .signInWithPopup(provider)
   .then((result) => {
@@ -195,16 +193,14 @@ const sendResetEmail = async (req, res, next) => {
     res.status(200).json({ message: "email reset password send!" });
     }).catch((error) => {
         res.status(400).json({ message: error.message});
-    });
-}
+    });}
 
 const sendVerificationEmail = async (req, res, next) => {
   const user = firebase.auth().currentUser;
-  //console.log(user);
   user.sendEmailVerification().then(() => { 
     res.status(200).json({ message: "email adress confirmation send!" });
     }).catch((error) => {
-      res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message });
     });
 }
 const getCurrentUser = async (req, res, next) => {
@@ -225,17 +221,12 @@ const getListUsers = (req, res) => {
       _users_list = listUsersResult.users;      
       console.log('user', _users_list);
       res.status(200).json(_users_list);
-      listUsersResult.users.forEach((userRecord) => {
-        
-      });
       if (listUsersResult.pageToken) {
         listAllUsers(listUsersResult.pageToken);
-      }
-    })
+      }})
     .catch((error) => {
       res.status(400).json({ message: error.message});
-    });
-};
+    });};
 
 
  async function countUsers(count) {
@@ -243,13 +234,12 @@ const getListUsers = (req, res) => {
   listUsersResult.users.map(user => {
     if (new Date(user.metadata.creationTime) < new Date("2023-01-12T00:00:00")) {
       count++;
-    }
-  });
+    }});
   if (listUsersResult.pageToken) {
-      count = await countUsers(count, listUsersResult.pageToken);
+    count = await countUsers(count, listUsersResult.pageToken);
   }
-  return count;
-}
+  return count;}
+
 const deleteAllUsers = (req, res) => {
   let uids = []
    getAuth()
@@ -259,8 +249,7 @@ const deleteAllUsers = (req, res) => {
       console.log(uids)
       if (listUsersResult.pageToken) {
         deleteAllUsers(listUsersResult.pageToken);
-      }
-    })
+      }})
     .catch((error) => {
       console.log('Error listing users:', error);
     }).finally(() => {
@@ -268,27 +257,13 @@ const deleteAllUsers = (req, res) => {
     })
 };
 
-async function listAllUsers (req, res, next) {
-  const results = await getAuth().listUsers(1000);
-  for (let i = 0; i < results.users.length; i++) {
-    const user = results.users[i];
-    const {uid, email} = user;
-    users.push({uid, email});
-  }
-  if (results.pageToken) {
-    getAllUsers(results.pageToken);
-  }
-  res.status(200).json(users);
-};
 
 const getUserwWithEmail = async (req, res, next) => {
   console.log("Getting user= %s", req.params.email);
   getAuth()
   .getUserByEmail(req.params.email)
   .then((userRecord) => {
-    // See the UserRecord reference doc for the contents of userRecord.
     res.status(200).json({ message: [userRecord.uid, userRecord.email] });
-        console.log(`Successfully fetched user data: ${userRecord.email}`);
       })
   .catch((error) => {
         res.status(400).json({ message: error.message});
@@ -300,9 +275,7 @@ const getUserInfos = async (req, res, next) => {
   getAuth()
   .getUser(req.params.uid)
   .then((userRecord) => {
-    // See the UserRecord reference doc for the contents of userRecord.
     res.status(200).json([userRecord]);
-    console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
   })
   .catch((error) => {
     res.status(400).json({ message: error.message});
@@ -323,18 +296,13 @@ const getUserRole = async (req, res, next) => {
        const obj2 = JSON.parse(JSON.stringify(userRecord));
       const obj3 = JSON.parse(JSON.stringify(data.data()));
       const mergedObj = Object.assign(obj2,obj3);
-      
       const jsonStr = JSON.stringify(mergedObj);
-      //console.log(JSON.parse(jsonStr)); 
       const result = JSON.parse(jsonStr);
-      // See the UserRecord reference doc for the contents of userRecord.
       res.status(200).json([result["role"]]);
-    }
-  })
+    }})
   .catch((error) => {
     res.status(400).json({ message: error.message});
-  });
-};
+  });};
 
 const updateUserinfos = async (req, res, next) => {
   getAuth()
@@ -357,12 +325,9 @@ const updateUserpassword = async (req, res, next) => {
   const user = firebase.auth().currentUser;
   user.updatePassword(req.body.password).then(() => {
     res.status(200).json({ message: "Successfully updated user"});
-  
   }).catch((error) => {
     res.status(400).json({ message: error.message});
-  });
-};
-
+  });};
 
 const deleteOneUser = async (req, res, next) => {
   getAuth()
@@ -376,19 +341,10 @@ const deleteOneUser = async (req, res, next) => {
   });
 };
 
-
-const ipMiddleware = function(req, res, next) {
-  const clientIp = requestIp.getClientIp(req); 
-  next();
-  res.status(200).json({ message: clientIp})
-};
-
 const getUserInfoswithIpAdress = async (req, res, next) => {
-  console.log("Getting user= %s", req.params.uid);
   getAuth()
   .getUser(req.params.uid)
   .then(async (userRecord) => {
-    console.log("Getting user= %s", req.params.uid);
     const user = await fireStore.collection("users").doc(req.params.uid);
     const data = await user.get();
     if (!data.exists) {
@@ -397,57 +353,26 @@ const getUserInfoswithIpAdress = async (req, res, next) => {
        const obj2 = JSON.parse(JSON.stringify(userRecord));
       const obj3 = JSON.parse(JSON.stringify(data.data()));
       const mergedObj = Object.assign(obj2,obj3);
-      
       const jsonStr = JSON.stringify(mergedObj);
-      //console.log(JSON.parse(jsonStr)); 
       const result = JSON.parse(jsonStr);
-      // See the UserRecord reference doc for the contents of userRecord.
       res.status(200).json([result]);
     }
   })
   .catch((error) => {
     res.status(400).json({ message: error.message});
-  });
-};
-/*
-const getAllMessages = async (req, res, next) => {
-  try {
-    const idUser = req.params.idUser;
-    const snapshot = await firebase.firestore().collection(`chats/${idUser}/messages`).orderBy('createdAt','desc').get();
-    console.log(`user id: ${idUser}`);
-    result=  snapshot.docs.map(doc => doc.data());
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+  });};
 
-const getCountMessagesByUserId = async (req, res, next) => {
-  try {
-    const idUser = req.params.idUser;
-    firebase.firestore().collection(`chats/${idUser}/messages`).get().then(
-      (snapshot) =>  res.status(200).send({length: snapshot.docs.length}) 
-    );
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-*/
 const blockUser = async (req, res, next) => {
   try {
-    console.log("blocking user= %s", req.params.uid);
     getAuth()
       .updateUser(req.params.uid, { disabled: true });
     res.status(200).json({ message: "Record updated successfully" });
   } 
   catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+    res.status(400).json({ message: error.message });}};
 
 const restoreUser = async (req, res, next) => {
   try {
-    console.log("blocking user= %s", req.params.uid);
     getAuth()
     .updateUser(req.params.uid, { disabled: false });
     res.status(200).json({ message: "Record updated successfully" });
@@ -455,26 +380,10 @@ const restoreUser = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
-/*
-const getCountMessages = async (req, res, next) => {
-  const users = await fireStore.collection(`chats/QMvFpTWIFrf7h79mWVr0mBhy6a72/messages`);
-  const data = await users.get();
-  const arr = [];
-    if (data.empty) {
-      res.status(200).json({ message: "No records found" });
-    } else {
-      let total = 0;
-      data.forEach((item) => {
-        console.log(item.id)
-        total = total + 1;
-      });
-    }
-};*/
 const getListofUsersWithRoleUser = async (req, res, next ) => {
   getAuth().listUsers().then((listUsersResult) => {
     const uids = listUsersResult.users.map((userRecord) => userRecord.uid);
     const userDocsRef = fireStore.collection('users').where('role', '==', 'user');
-
     const query = userDocsRef.where(firebasee.firestore.FieldPath.documentId(), 'in', uids);
     query.get().then((querySnapshot) => {
       const users = [];
@@ -486,7 +395,6 @@ const getListofUsersWithRoleUser = async (req, res, next ) => {
             email: userRecord.email,
             displayName: userRecord.displayName,
             photoURL: userRecord.photoURL,
-            // Add any other user properties you want to include here
             ...doc.data()
           });
         }
@@ -513,7 +421,6 @@ module.exports = {
     signInWithFacebook,
     sendResetEmail,
     sendVerificationEmail,
-    listAllUsers,
     getUserwWithEmail,
     getUserInfos,
     updateUserinfos,
@@ -521,7 +428,6 @@ module.exports = {
     getListUsers,
     getCurrentUser,
     updateUserpassword,
-    ipMiddleware,
     getUserInfoswithIpAdress,
     deleteAllUsers,
     blockUser,

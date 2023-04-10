@@ -1,15 +1,7 @@
 const firebase = require("../db");
-const User  = require("../models/user-model");
 const fireStore = firebase.firestore();
-const firebasee = require('firebase');
-const { getAuth, UserRecord } = require('firebase-admin/auth');
-const requestIp = require('request-ip');
-const Post = require("../models/post-model");
-const { getFirestore } = require("firebase-admin/firestore");
-const { firestore } = require("firebase-admin");
 const savedPost = require("../models/saved-post-model");
 const admin = require('firebase-admin');
-let users = [];
 
 const SavePost = async (req, res, next) => {
   try {
@@ -33,8 +25,6 @@ const getAllSavedPostsAndTheirFiles = async(req,res, next)=> {
   const bucket = admin.storage().bucket();
   fireStore.collection("savedPosts").where('currentUserId', '==', req.params.currentUserId).get().then(snapshot => {
     const ids = snapshot.docs.map(doc => doc.data().postId);
-  console.log(ids);
-    // Use the IDs to find the corresponding folders in Firebase Storage
     const promises = ids.map(id => {
       return fireStore.collection('posts').doc(id).get().then(doc => {
         return {
@@ -53,27 +43,19 @@ const getAllSavedPostsAndTheirFiles = async(req,res, next)=> {
               return {name: file.name, downloadURL: signedUrls[0]};
             });
           });
-    
           return Promise.all(filePromises).then(files => {
             return {...docData, files};
-          });
-        });
-      });
-    });
-  
-    // Wait for all promises to resolve and return the results in a JSON file
+          });});
+      });});
     Promise.all(promises).then(results => {
       const data = {
         posts: results,
       };
       res.json(data)
-      //fs.writeFileSync('./res.json', JSON.stringify(data));
     });
-  });
-}
+  });}
 
 const getAllSavedPosts = async (req, res, next) => {
-  const date  = new Date();
   try {
     console.log("Getting all saved posts");
     const posts = await fireStore.collection("savedPosts").where('currentUserId', '==', req.params.currentUserId);
@@ -100,16 +82,13 @@ const getAllSavedPosts = async (req, res, next) => {
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
-  }
-};
- const deleteSavedPost = async (req,res, next) => {
-  const collectionRef = fireStore.collection("savedPosts");
-const query = collectionRef.where('postId', '==', req.params.id);
+  }};
 
-// Execute the query to get the documents to delete
-query.get().then(querySnapshot => {
-  querySnapshot.forEach(doc => {
-    // Delete each document that matches the query
+const deleteSavedPost = async (req,res, next) => {
+  const collectionRef = fireStore.collection("savedPosts");
+  const query = collectionRef.where('postId', '==', req.params.id);
+  query.get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
     doc.ref.delete().then(() => {
       res.status(200).json({ message: "post deleted successfully" })
     }).catch(error => {
@@ -118,9 +97,9 @@ query.get().then(querySnapshot => {
   });
 }).catch(error => {
   console.error('Error getting documents to delete:', error);
-});
- };
- const countSavedPosts = async (req, res, next) => {
+});};
+
+const countSavedPosts = async (req, res, next) => {
   fireStore.collection("savedPosts").where('currentUserId', '==', req.params.currentUserId).get()
   .then((snapshot) => {
     const savedPostCount = snapshot.size;

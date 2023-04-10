@@ -8,38 +8,32 @@ const SharePost = async (req, res, next) => {
     collectionRef.where('currentUserId', '==', req.body.currentUserId).where('idSharedUser', '==', req.body.idSharedUser).where('postId', '==', req.body.postId).get()
   .then(async snapshot => {
     if (snapshot.empty) {
-      // If the value does not exist, add data to the collection
       await fireStore.collection("sharedPosts").add(
-        { 
-            postId: req.body.postId,
-            postContenu: req.body.postContenu,
-            postPhoto: req.body.postPhoto,
-    
-            adminName: req.body.adminName,
-            adminPhoto: req.body.adminPhoto,
-    
-            currentUserId: req.body.currentUserId,
-            currentUserName: req.body.currentUserName,
-            currentUserphoto : req.body.currentUserphoto,
-            idSharedUser: req.body.idSharedUser,
-            dateShare : new Date(),
+        { postId: req.body.postId,
+          postContenu: req.body.postContenu,
+          postPhoto: req.body.postPhoto,
+          adminName: req.body.adminName,
+          adminPhoto: req.body.adminPhoto,
+          currentUserId: req.body.currentUserId,
+          currentUserName: req.body.currentUserName,
+          currentUserphoto : req.body.currentUserphoto,
+          idSharedUser: req.body.idSharedUser,
+          dateShare : new Date(),
         });
-        res.status(201).json({ message: "post saved successfully" });
-
+      res.status(201).json({ message: "post shared successfully" });
     }
-    else res.status(404).json({ message: "you have shared deja" });
-  })
-
-  } catch (error) {
+    else res.status(404).json({ message: "you have shared already with this user" });
+  })} 
+  catch (error) {
     console.log(error.message);
     res.status(400).json({ message: error.message });
-  }
-};
+  }};
+
 const getAllSharedPostsByCurrentUserId = async (req, res, next) => {
-    try {
-      const sharedposts = await fireStore.collection("sharedPosts").where('idSharedUser', '==', req.params.idSharedUser);
-      const data = await sharedposts.get();
-      const sharedpostslist = [];
+  try {
+    const sharedposts = await fireStore.collection("sharedPosts").where('idSharedUser', '==', req.params.idSharedUser);
+    const data = await sharedposts.get();
+    const sharedpostslist = [];
       if (data.empty) {
         res.status(404).json({ message: "No posts found" });
       } else {
@@ -65,10 +59,7 @@ const getAllSharedPostsByCurrentUserId = async (req, res, next) => {
       }
     } catch (error) {
       res.status(400).json({ message: error.message });
-    }
-  };
-
-
+    }};
 
 module.exports = {
     SharePost,
