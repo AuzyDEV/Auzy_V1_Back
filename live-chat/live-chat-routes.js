@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllMessages, getCountMessages, getCountMessagesByUserId } = require("../controllers/live-chat-controller");
+const { getAllMessages, getCountMessages, getCountMessagesByUserId } = require("./live-chat-controller");
 const router = express.Router();
 router.get("/numberofmessage", getCountMessages);
 router.get("/msg/:idUser", getAllMessages);

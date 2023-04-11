@@ -1,6 +1,6 @@
-const firebase = require("../db");
+const firebase = require("../../db");
 const fireStore = firebase.firestore();
-const savedPost = require("../models/saved-post-model");
+const savedPost = require("./saved-posts-model");
 const admin = require('firebase-admin');
 
 const SavePost = async (req, res, next) => {
