@@ -1,4 +1,4 @@
-const firebase = require("../../db");
+const firebase = require("../../config/db");
 const fireStore = firebase.firestore();
 const savedPost = require("./saved-posts-model");
 const admin = require('firebase-admin');

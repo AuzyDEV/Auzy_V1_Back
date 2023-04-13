@@ -1,5 +1,5 @@
 const express = require("express");
-const { getPostsForUsers, getAllPostsAndTheirFiles, getOnePostWithFileDetails, getSavedPostWithBoolAttributeAndTheirFiles,} = require("./all-posts-controller");
+const { getPostsForUsers, getAllPostsAndTheirFiles, getOnePostWithFileDetails, getSavedPostWithBoolAttributeAndTheirFiles,} = require("./posts-controller");
 const router = express.Router();
 router.get("/saved/:currentUserId", getSavedPostWithBoolAttributeAndTheirFiles);
 router.get("/postsforusers", getPostsForUsers);

@@ -1,4 +1,4 @@
-const firebase = require("../../db");
+const firebase = require("../../config/db");
 const User  = require("../../admin-functions/user-management/user-management-model.js");
 const fireStore = firebase.firestore();
 const firebasee = require('firebase');

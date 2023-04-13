@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const functions = require('firebase-functions')
-const firebase = require("../db");
+const firebase = require("../config/db");
 const storage = firebase.storage().ref();
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");

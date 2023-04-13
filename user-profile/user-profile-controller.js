@@ -1,12 +1,5 @@
-const firebase = require("../db");
-const User  = require("../admin-functions/user-management/user-management-model.js");
-const fireStore = firebase.firestore();
-const firebasee = require('firebase');
-const { getAuth, UserRecord } = require('firebase-admin/auth');
-const requestIp = require('request-ip');
-
-let users = [];
-
+const firebase = require("../config/db");
+const { getAuth} = require('firebase-admin/auth');
 
 const sendVerificationEmail = async (req, res, next) => {
   const user = firebase.auth().currentUser;

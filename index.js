@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const config = require("./config");
-const UserRoutes = require("./routes/user-routes");
+const config = require("./config/config");
+const userProfilRoutes = require("./user-profile/user-profile-routes");
 const notifRoutes = require("./notifications/notifications-routes");
-const filesRoutes = require("./routes/files-routes");
+const filesRoutes = require("./files-functions/files-functions-routes");
 const mailingRoutes = require("./contact-us/contact-us-routes");
 const messagingRoutes = require("./live-chat/live-chat-routes");
-const postsRoutes = require("./social-post/posts/all-posts-routes");
+const postsRoutes = require("./social-post/posts/posts-routes");
 const savedPostRoutes = require("./social-post/saved-posts/saved-posts-routes");
 const sharedPostRoutes = require("./social-post/share-post/share-post-routes");
 const DataBaseCollectionRoutes = require("./listing-directory/listing-directory-routes");
@@ -26,16 +26,16 @@ app.use("/api", postManRoutes.routes);
 app.use("/api", UserManRoutes.routes);
 app.use("/api", loginRoutes.routes);
 app.use("/api", createaccountRoutes.routes);
-
-app.use("/api", UserRoutes.routes);
-app.use("/api", notifRoutes.routes);
-app.use("/api", filesRoutes.routes);
-app.use("/api", mailingRoutes.routes);
-app.use("/api", messagingRoutes.routes);
 app.use("/api", postsRoutes.routes);
 app.use("/api", savedPostRoutes.routes);
 app.use("/api", sharedPostRoutes.routes);
 app.use("/api", DataBaseCollectionRoutes.routes);
+app.use("/api", notifRoutes.routes);
+app.use("/api", userProfilRoutes.routes);
+app.use("/api", filesRoutes.routes);
+app.use("/api", mailingRoutes.routes);
+app.use("/api", messagingRoutes.routes);
+
 
 app.listen(config.port, () => {
   console.log("Service endpoint= %s", config.url);

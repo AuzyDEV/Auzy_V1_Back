@@ -1,4 +1,4 @@
-const firebase = require("../../db");
+const firebase = require("../../config/db");
 const sharedPost = require("./share-post-model");
 const fireStore = firebase.firestore();
 
