@@ -9,7 +9,6 @@ const sendEmail = async (options) => {
       pass: process.env.PASS,
     },
   });
-
   const mailOptions = {
     from: options.from,
     to: options.email,

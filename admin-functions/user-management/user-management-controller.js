@@ -2,7 +2,8 @@ const firebase = require("../../config/db");
 const fireStore = firebase.firestore();
 const firebasee = require('firebase');
 const { getAuth, UserRecord } = require('firebase-admin/auth');
-const requestIp = require('request-ip');
+const JsonResponse = require("../../config/json-response");
+const response1= require("../../config/response")
 
 let users = [];
 
@@ -39,8 +40,6 @@ const deleteAllUsers = (req, res) => {
     })
 };
 
-
-
 const getUserInfos = async (req, res, next) => {
   console.log("Getting user= %s", req.params.uid);
   getAuth()
@@ -49,7 +48,8 @@ const getUserInfos = async (req, res, next) => {
     res.status(200).json([userRecord]);
   })
   .catch((error) => {
-    res.status(400).json({ message: error.message});
+   //response1.send(res);
+   res.status(400).json({ message: error.message});
   });
 };
 
