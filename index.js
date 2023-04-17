@@ -16,7 +16,6 @@ const postManRoutes = require("./admin-functions/post-management/post-management
 const UserManRoutes = require("./admin-functions/user-management/user-management-routes")
 const loginRoutes = require("./authentification/login/login-routes")
 const createaccountRoutes = require("./authentification/create-account/create-account-routes")
-
 const app = express(); 
 app.use(express.json());
 app.use(cors());
@@ -35,8 +34,4 @@ app.use("/api", userProfilRoutes.routes);
 app.use("/api", filesRoutes.routes);
 app.use("/api", mailingRoutes.routes);
 app.use("/api", messagingRoutes.routes);
-
-
-app.listen(config.port, () => {
-  console.log("Service endpoint= %s", config.url);
-});
+app.listen(config.port, () => {console.log("Service endpoint= %s", config.url);});

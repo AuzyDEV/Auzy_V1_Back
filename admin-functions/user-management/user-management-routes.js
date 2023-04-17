@@ -12,7 +12,4 @@ router.put("/restoreuser/:uid", restoreUser);
 router.get("/userole/:uid", getUserRole);
 router.get('/usersrole', getListofUsersWithRoleUser)
 router.get("/get", getListUsers);
-
-module.exports = {
-  routes: router
-};
+module.exports = {routes: router};

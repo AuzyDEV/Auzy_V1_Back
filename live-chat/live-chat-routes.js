@@ -4,7 +4,4 @@ const router = express.Router();
 router.get("/numberofmessage", getCountMessages);
 router.get("/msg/:idUser", getAllMessages);
 router.get("/nbr/:idUser", getCountMessagesByUserId);
-
-module.exports = {
-  routes: router
-};
+module.exports = {routes: router};

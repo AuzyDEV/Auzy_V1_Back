@@ -5,6 +5,4 @@ router.get("/saved/:currentUserId", getSavedPostWithBoolAttributeAndTheirFiles);
 router.get("/postsforusers", getPostsForUsers);
 router.get("/allposts", getAllPostsAndTheirFiles);
 router.get("/post/:id", getOnePostWithFileDetails);
-module.exports = {
-    routes: router
-  };
+module.exports = {routes: router};

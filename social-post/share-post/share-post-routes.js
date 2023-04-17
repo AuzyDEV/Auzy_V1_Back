@@ -3,6 +3,4 @@ const { SharePost, getAllSharedPostsByCurrentUserId } = require("./share-post-co
 const router = express.Router();
 router.post("/sharepost", SharePost);
 router.get("/sharedposts/:idSharedUser", getAllSharedPostsByCurrentUserId)
-module.exports = {
-    routes: router
-  };
+module.exports = { routes: router};

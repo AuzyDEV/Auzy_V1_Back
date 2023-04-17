@@ -1,7 +1,6 @@
 const firebase = require("../../config/db");
 const sharedPost = require("./share-post-model");
 const fireStore = firebase.firestore();
-
 const SharePost = async (req, res, next) => {
   try {
     collectionRef = fireStore.collection("sharedPosts")
@@ -9,16 +8,16 @@ const SharePost = async (req, res, next) => {
   .then(async snapshot => {
     if (snapshot.empty) {
       await fireStore.collection("sharedPosts").add(
-        { postId: req.body.postId,
-          postContenu: req.body.postContenu,
-          postPhoto: req.body.postPhoto,
-          adminName: req.body.adminName,
-          adminPhoto: req.body.adminPhoto,
-          currentUserId: req.body.currentUserId,
-          currentUserName: req.body.currentUserName,
-          currentUserphoto : req.body.currentUserphoto,
-          idSharedUser: req.body.idSharedUser,
-          dateShare : new Date(),
+        {postId: req.body.postId,
+        postContenu: req.body.postContenu,
+        postPhoto: req.body.postPhoto,
+        adminName: req.body.adminName,
+        adminPhoto: req.body.adminPhoto,
+        currentUserId: req.body.currentUserId,
+        currentUserName: req.body.currentUserName,
+        currentUserphoto : req.body.currentUserphoto,
+        idSharedUser: req.body.idSharedUser,
+        dateShare : new Date(),
         });
       res.status(201).json({ message: "post shared successfully" });
     }
@@ -29,7 +28,7 @@ const SharePost = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }};
 
-const getAllSharedPostsByCurrentUserId = async (req, res, next) => {
+const getAllSharedPostsByCurrentUserId = async (req, res) => {
   try {
     const sharedposts = await fireStore.collection("sharedPosts").where('idSharedUser', '==', req.params.idSharedUser);
     const data = await sharedposts.get();
@@ -61,7 +60,4 @@ const getAllSharedPostsByCurrentUserId = async (req, res, next) => {
       res.status(400).json({ message: error.message });
     }};
 
-module.exports = {
-    SharePost,
-    getAllSharedPostsByCurrentUserId
-  }
+module.exports = { SharePost, getAllSharedPostsByCurrentUserId}

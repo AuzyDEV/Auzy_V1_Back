@@ -1,12 +1,8 @@
 const admin = require('firebase-admin');
-const nodemailer = require('nodemailer');
-const functions = require('firebase-functions')
 const firebase = require("../config/db");
-const storage = firebase.storage().ref();
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");
-
-const sendNotification = async (req, res, next) => {
+const sendNotification = async (res) => {
   try {
     await admin.messaging().sendMulticast({
         tokens: ["BBG8yFQpySQK9QRC8QDI98bVQerCwIw_sGD1Qj-vH0z_eB4KFYW3XhFq1OHRnYoyQ-BY8eWg6VoHEi2JpjyW6gM", 
@@ -20,9 +16,5 @@ const sendNotification = async (req, res, next) => {
     res.status(200).json({ message: "notification send!" });
   } catch (error) {
     res.status(400).json({ message: error.message });
-  }
-};
-
-module.exports = {
-    sendNotification,
-  }
+  }};
+module.exports = {sendNotification,}

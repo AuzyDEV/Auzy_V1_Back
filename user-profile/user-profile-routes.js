@@ -3,7 +3,4 @@ const {sendVerificationEmail, getCurrentUser} = require("./user-profile-controll
 const router = express.Router();
 router.get("/currentuser", getCurrentUser);
 router.post("/confirmemail", sendVerificationEmail);
-
-module.exports = {
-  routes: router
-};
+module.exports = {routes: router};

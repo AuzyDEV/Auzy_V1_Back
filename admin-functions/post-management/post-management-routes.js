@@ -7,6 +7,4 @@ router.put("/post/:id", updatePost);
 router.put("/postvisibilityfalse/:id", updatePostVisisbilityToFalse);
 router.put("/postvisibilitytrue/:id", updatePostVisibilityToTrue)
 router.delete("/post/:id", deletePost);
-module.exports = {
-    routes: router
-  };
+module.exports = {routes: router};

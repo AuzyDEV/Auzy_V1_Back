@@ -7,6 +7,4 @@ router.get("/DB/:collectionName", getAllDB)
 router.get("/DataB/:collectionName/:speciality", getAllDBWithSpecificAttribute)
 router.get("/DB/:collectionName/:id", getOneDBWithFileDetails)
 router.delete("/DB/:collectionName/:id", deleteDB)
-module.exports = {
-    routes: router
-  };
+module.exports = {routes: router};

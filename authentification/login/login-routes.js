@@ -4,7 +4,4 @@ router.post("/login", login);
 router.get("/logout", logout);
 router.post("/logingoogle", signInWithGoogle);
 router.post("/loginfacebook", signInWithFacebook);
-
-module.exports = {
-  routes: router
-};
+module.exports = {routes: router};

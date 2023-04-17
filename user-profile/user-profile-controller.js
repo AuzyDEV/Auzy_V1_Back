@@ -1,18 +1,16 @@
 const firebase = require("../config/db");
 const { getAuth} = require('firebase-admin/auth');
-
-const sendVerificationEmail = async (req, res, next) => {
+const sendVerificationEmail = async (res) => {
   const user = firebase.auth().currentUser;
   user.sendEmailVerification().then(() => { 
     res.status(200).json({ message: "email adress confirmation send!" });
-    }).catch((error) => {
+  }).catch((error) => {
     res.status(400).json({ message: error.message });
-    });
+  });
 }
-const getCurrentUser = async (req, res, next) => {
+const getCurrentUser = async (res) => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      var uid = user.uid;
       res.status(200).json([user]);
     } else {
       res.status(400).json({ message: "User is signed out" });
@@ -20,7 +18,7 @@ const getCurrentUser = async (req, res, next) => {
   });
 }
 
- async function countUsers(count) {
+async function countUsers(count) {
   const listUsersResult = await getAuth().listUsers(1000);
   listUsersResult.users.map(user => {
     if (new Date(user.metadata.creationTime) < new Date("2023-01-12T00:00:00")) {
@@ -29,13 +27,7 @@ const getCurrentUser = async (req, res, next) => {
   if (listUsersResult.pageToken) {
     count = await countUsers(count, listUsersResult.pageToken);
   }
-  return count;}
+  return count;
+}
+module.exports = {getCurrentUser, sendVerificationEmail, countUsers,}
 
-
-
-
-module.exports = {
-    getCurrentUser,
-    sendVerificationEmail,
-    countUsers,
-  }
