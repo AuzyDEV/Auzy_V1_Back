@@ -1,6 +1,6 @@
 const firebase = require("../../config/db");
 const firebasee = require('firebase');
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password).then(async (userCredential) => {
   firebase.auth().onAuthStateChanged(
     async function(user) {
@@ -18,7 +18,7 @@ const login = async (req, res, next) => {
       res.status(400).json({ message: error.message });
     else
     res.status(500).json({ message: error.message });
-  });}
+});}
 
 const logout = async (res) => {
   firebase.auth().signOut().then(() => {

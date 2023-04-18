@@ -101,5 +101,4 @@ const deletePost = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }};
-
 module.exports = {addPost, getAllPosts, getPostById, updatePost, deletePost, updatePostVisisbilityToFalse, updatePostVisibilityToTrue,}

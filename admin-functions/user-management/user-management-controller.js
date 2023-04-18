@@ -2,30 +2,31 @@ const firebase = require("../../config/db");
 const fireStore = firebase.firestore();
 const firebasee = require('firebase');
 const { getAuth } = require('firebase-admin/auth');
-const getListUsers = (req, res) => {
+const getListUsers = (res) => {
   var _users_list = [];
   getAuth().listUsers(1000).then((listUsersResult) => {
     _users_list = listUsersResult.users;
     res.status(200).json(_users_list);
     if (listUsersResult.pageToken) {
       listAllUsers(listUsersResult.pageToken);
-    }})
+  }})
   .catch((error) => {
       res.status(400).json({ message: error.message});
-    });};
+  });
+};
 
 const deleteAllUsers = () => {
   let uids = []
-   getAuth().listUsers(1000).then((listUsersResult) => {
+  getAuth().listUsers(1000).then((listUsersResult) => {
     uids = uids.concat(listUsersResult.users.map((userRecord) => userRecord.uid))
     if (listUsersResult.pageToken) {
       deleteAllUsers(listUsersResult.pageToken);
     }})
-    .catch((error) => {
-      console.log('Error listing users:', error);
-    }).finally(() => {
-      getAuth().deleteUsers(uids)
-    })};
+  .catch((error) => {
+    console.log('Error listing users:', error);})
+  .finally(() => {
+    getAuth().deleteUsers(uids)
+})};
 
 const getUserInfos = async (req, res) => {
   getAuth().getUser(req.params.uid).then((userRecord) => {
