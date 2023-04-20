@@ -22,7 +22,7 @@ const addPost = async (req, res) => {
   }catch (error) {
     console.log(error);}};
 
-const getAllPosts = async (res) => {
+const getAllPosts = async (req, res) => {
   try {
     const posts = await fireStore.collection("posts");
     const data = await posts.get();

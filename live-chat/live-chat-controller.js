@@ -21,7 +21,7 @@ const getCountMessagesByUserId = async (req, res) => {
     res.status(400).json({ message: error.message });
 }};
 
-const getCountMessages = async (res) => {
+const getCountMessages = async (req, res) => {
   const users = await fireStore.collection(`chats/QMvFpTWIFrf7h79mWVr0mBhy6a72/messages`);
   const data = await users.get();
   if (data.empty) {

@@ -20,14 +20,14 @@ const login = async (req, res) => {
     res.status(500).json({ message: error.message });
 });}
 
-const logout = async (res) => {
+const logout = async (req, res) => {
   firebase.auth().signOut().then(() => {
     res.status(200).json({ message: "User logout successfully" });
   }).catch((error) => {
     res.status(400).json({ message:  error.message });
   });}
 
-const signInWithGoogle = async (res) => {
+const signInWithGoogle = async (req, res) => {
   var provider = new firebasee.auth.GoogleAuthProvider();
   firebase.auth()
   .signInWithPopup(provider)
@@ -43,7 +43,7 @@ const signInWithGoogle = async (res) => {
     res.status(400).json({ message: error.message});
   });}
 
-const signInWithFacebook = async (res) => {
+const signInWithFacebook = async (req, res) => {
   var provider = new firebasee.auth.FacebookAuthProvider();
   firebase
   .auth()

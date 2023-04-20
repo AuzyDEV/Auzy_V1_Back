@@ -1,6 +1,6 @@
 const firebase = require("../config/db");
 const { getAuth} = require('firebase-admin/auth');
-const sendVerificationEmail = async (res) => {
+const sendVerificationEmail = async (req, res) => {
   const user = firebase.auth().currentUser;
   user.sendEmailVerification().then(() => { 
     res.status(200).json({ message: "email adress confirmation send!" });
@@ -8,7 +8,7 @@ const sendVerificationEmail = async (res) => {
     res.status(400).json({ message: error.message });
   });
 }
-const getCurrentUser = async (res) => {
+const getCurrentUser = async (req, res) => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       res.status(200).json([user]);

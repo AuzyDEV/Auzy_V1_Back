@@ -3,7 +3,7 @@ const fireStore = firebase.firestore();
 const Post = require("../../admin-functions/post-management/post-management-model");
 const admin = require('firebase-admin');
 
-const getPostsForUsers = async (res) => {
+const getPostsForUsers = async (req, res) => {
   let listposts = [];
   const date = new Date();
   try {
@@ -31,7 +31,7 @@ const getPostsForUsers = async (res) => {
     console.log(error.message)
   }};
 
-const getAllPostsAndTheirFiles = async(res)=> {
+const getAllPostsAndTheirFiles = async(req, res)=> {
   const bucket = admin.storage().bucket();
   fireStore.collection("posts").where("visibility", "==", true).orderBy('date', 'desc').get()
   .then(snapshot => {
@@ -74,7 +74,7 @@ const getOnePostWithFileDetails  = async (req, res)=> {
 return res.json(response)
 }
 
-const getAllPostsAndFiles = async(res)=>{
+const getAllPostsAndFiles = async(req, res)=>{
   let info = [];
   fireStore.collection("posts").where("visibility", "==", false).orderBy('date', 'desc').get()
   .then(function(querySnapshot) {

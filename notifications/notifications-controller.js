@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const firebase = require("../config/db");
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");
-const sendNotification = async (res) => {
+const sendNotification = async (req, res) => {
   try {
     await admin.messaging().sendMulticast({
         tokens: ["BBG8yFQpySQK9QRC8QDI98bVQerCwIw_sGD1Qj-vH0z_eB4KFYW3XhFq1OHRnYoyQ-BY8eWg6VoHEi2JpjyW6gM", 

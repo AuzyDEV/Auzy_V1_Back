@@ -2,7 +2,7 @@ const firebase = require("../../config/db");
 const fireStore = firebase.firestore();
 const firebasee = require('firebase');
 const { getAuth } = require('firebase-admin/auth');
-const getListUsers = (res) => {
+const getListUsers = (req, res) => {
   var _users_list = [];
   getAuth().listUsers(1000).then((listUsersResult) => {
     _users_list = listUsersResult.users;
@@ -15,7 +15,7 @@ const getListUsers = (res) => {
   });
 };
 
-const deleteAllUsers = () => {
+const deleteAllUsers = (req, res) => {
   let uids = []
   getAuth().listUsers(1000).then((listUsersResult) => {
     uids = uids.concat(listUsersResult.users.map((userRecord) => userRecord.uid))
@@ -116,7 +116,7 @@ const restoreUser = async (req, res) => {
     res.status(400).json({ message: error.message });
   }};
 
-const getListofUsersWithRoleUser = async (res) => {
+const getListofUsersWithRoleUser = async (req, res) => {
   getAuth().listUsers().then((listUsersResult) => {
   const uids = listUsersResult.users.map((userRecord) => userRecord.uid);
   const userDocsRef = fireStore.collection('users').where('role', '==', 'user');
