@@ -1,5 +1,6 @@
 const firebase = require("../../config/db");
 const firebasee = require('firebase');
+const { errorNotFound, successResponse } = require("../../config/response");
 const login = async (req, res) => {
   firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password).then(async (userCredential) => {
   firebase.auth().onAuthStateChanged(
@@ -7,11 +8,11 @@ const login = async (req, res) => {
       if(user.emailVerified == true){
         token = await userCredential.user.getIdToken();
         console.log(token)
-      res.status(200).json({ message: "User signin successfully", data: token });
+        successResponse.send(res, "User signin successfully")
     }
-    else {
-      res.status(404).json({ message: "no confirmation email" });
-    }})
+      else {
+        errorNotFound.send(res, "no confirmation email");
+      }})
   })
   .catch((error) => {
     if (error.code === 'auth/user-not-found')

@@ -1,4 +1,5 @@
 const firebase = require("../../config/db");
+const { successResponse, errorResponse } = require("../../config/response");
 const sharedPost = require("./share-post-model");
 const fireStore = firebase.firestore();
 const SharePost = async (req, res, next) => {
@@ -54,10 +55,10 @@ const getAllSharedPostsByCurrentUserId = async (req, res) => {
           sharedpostslist.push(sharedpost);
           total = total + 1;
         });
-        res.status(200).json({sharedposts: sharedpostslist});
+        successResponse.send(res, {sharedposts: sharedpostslist})
       }
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      errorResponse.send(res, error.message);
     }};
 
 module.exports = { SharePost, getAllSharedPostsByCurrentUserId}

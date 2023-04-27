@@ -2,16 +2,17 @@ const firebase = require("../../config/db");
 const fireStore = firebase.firestore();
 const firebasee = require('firebase');
 const { getAuth } = require('firebase-admin/auth');
+const { successResponse, errorNotFound, errorResponse } = require("../../config/response");
 const getListUsers = (req, res) => {
   var _users_list = [];
   getAuth().listUsers(1000).then((listUsersResult) => {
     _users_list = listUsersResult.users;
-    res.status(200).json(_users_list);
+    successResponse.send(res, _users_list)
     if (listUsersResult.pageToken) {
       listAllUsers(listUsersResult.pageToken);
   }})
   .catch((error) => {
-      res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message)
   });
 };
 
@@ -30,10 +31,10 @@ const deleteAllUsers = (req, res) => {
 
 const getUserInfos = async (req, res) => {
   getAuth().getUser(req.params.uid).then((userRecord) => {
-    res.status(200).json([userRecord]);
+    successResponse.send(res, [userRecord])
   })
   .catch((error) => {
-   res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message)
   });};
 
 const getUserRole = async (req, res) => {
@@ -41,44 +42,44 @@ const getUserRole = async (req, res) => {
     const user = await fireStore.collection("users").doc(req.params.uid);
     const data = await user.get();
     if (!data.exists) {
-      res.status(404).json({ message: "Record not found" });
+      errorNotFound.send(res,"Record not found")
     } else {
       const obj2 = JSON.parse(JSON.stringify(userRecord));
       const obj3 = JSON.parse(JSON.stringify(data.data()));
       const mergedObj = Object.assign(obj2,obj3);
       const jsonStr = JSON.stringify(mergedObj);
       const result = JSON.parse(jsonStr);
-      res.status(200).json([result["role"]]);
+      successResponse.send(res, [result["role"]])
     }})
   .catch((error) => {
-    res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message )
   });};
 
 const updateUserinfos = async (req, res) => {
   getAuth().updateUser(req.params.uid, {email: req.body.email,password: req.body.password,displayName: req.body.displayName,photoURL: req.body.photoURL,})
   .then((userRecord) => {
     console.log(JSON.stringify(userRecord))
-    res.status(200).json({ message: "Successfully updated user", data: [JSON.stringify(userRecord)] });
+    successResponse.send(res, "Successfully updated user")
   })
   .catch((error) => {
-    res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message )
   });};
 
 const updateUserpassword = async (req, res) => {
   const user = firebase.auth().currentUser;
   user.updatePassword(req.body.password).then(() => {
-    res.status(200).json({ message: "Successfully updated user"});
+    successResponse.send(res, "Successfully updated user")
   }).catch((error) => {
-    res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message )
   });};
 
 const deleteOneUser = async (req, res) => {
   getAuth().deleteUser(req.params.uid).then(async () => {
     await fireStore.collection("users").doc(req.params.uid).delete();
-    res.status(200).json({ message: "Successfully deleted user"});
+    successResponse.send(res, "Successfully deleted user")
   })
   .catch((error) => {
-    res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message )
   });};
 
 const getUserInfoswithIpAdress = async (req, res) => {
@@ -86,34 +87,35 @@ const getUserInfoswithIpAdress = async (req, res) => {
     const user = await fireStore.collection("users").doc(req.params.uid);
     const data = await user.get();
     if (!data.exists) {
-      res.status(404).json({ message: "Record not found" });
+      errorNotFound.send(res, "Record not found")
     } else {
       const obj2 = JSON.parse(JSON.stringify(userRecord));
       const obj3 = JSON.parse(JSON.stringify(data.data()));
       const mergedObj = Object.assign(obj2,obj3);
       const jsonStr = JSON.stringify(mergedObj);
       const result = JSON.parse(jsonStr);
-      res.status(200).json([result]);
+      successResponse.send(res, [result])
     }
   })
   .catch((error) => {
-    res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message )
   });};
 
 const blockUser = async (req, res) => {
   try {
     getAuth().updateUser(req.params.uid, { disabled: true });
-    res.status(200).json({ message: "Record updated successfully" });
+    successResponse.send(res, "Record updated successfully")
   } 
   catch (error) {
-    res.status(400).json({ message: error.message });}};
+    errorResponse.send(res, error.message );
+  }};
 
 const restoreUser = async (req, res) => {
   try {
     getAuth().updateUser(req.params.uid, { disabled: false });
-    res.status(200).json({ message: "Record updated successfully" });
+    successResponse.send(res, "Record updated successfully" )
   } catch (error) {
-    res.status(400).json({ message: error.message });
+      errorResponse.send(res, error.message )
   }};
 
 const getListofUsersWithRoleUser = async (req, res) => {
@@ -129,7 +131,7 @@ const getListofUsersWithRoleUser = async (req, res) => {
         users.push({uid: userRecord.uid,email: userRecord.email,displayName: userRecord.displayName,photoURL: userRecord.photoURL,
         ...doc.data()});
       }})
-    res.json({users: users});
+      successResponse.send(res,{users: users})
     }).catch((error) => {
       console.error(error);
     });

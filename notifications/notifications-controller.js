@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const firebase = require("../config/db");
+const { errorResponse, successResponse } = require('../config/response');
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");
 const sendNotification = async (req, res) => {
@@ -13,8 +14,8 @@ const sendNotification = async (req, res) => {
           imageUrl: "https://www.shutterstock.com/image-vector/notification-icon-vector-material-design-260nw-759841507.jpg",
         },
     })
-    res.status(200).json({ message: "notification send!" });
+    successResponse.send(res, "notification send!")
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    errorResponse.send(res, error.message);
   }};
 module.exports = {sendNotification,}

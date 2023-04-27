@@ -1,18 +1,19 @@
 const firebase = require("../config/db");
 const fireStore = firebase.firestore();
 const admin = require('firebase-admin');
+const { errorNotFound, errorResponse, successResponse } = require("../config/response");
+const { succesSendRequest } = require("../config/response");
 const addDB = async (req, res) => {
   try {
     const { collectionName, ...data } = req.body;
     await fireStore.collection(req.body.collectionName).add(data).then(docRef => {
     const response = {status: 'success',id: docRef.id};
-      res.status(201).json(response);}) 
+    succesSendRequest.send(res, response)}) 
     .catch(error => {
-      const response = {status: 'error',message: error.message};
-      res.status(400).json(response);
+      errorResponse.send(res, error);
       });
   } catch (error) {
-    res.status(404).json(error);}
+    errorNotFound.send(res, error);}
 }
 
 const deleteDB = async (req, res) => {
@@ -25,9 +26,9 @@ const deleteDB = async (req, res) => {
     for (const file of allfiles) {
       await file.delete();
     }
-    res.status(200).json({ message: "DB deleted successfully" });
+    successResponse.send(res, "DB deleted successfully")
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    errorResponse.send(res, error.message)
   }};
 
 const updateDB = async (req, res) => {
@@ -35,9 +36,9 @@ const updateDB = async (req, res) => {
     const { collectionName, ...data } = req.body;
     const post = await fireStore.collection(req.body.collectionName).doc(req.params.id);
     await post.update(data);
-      res.status(200).json({ message: "Record updated successfully" });
+      successResponse.send(res, "Record updated successfully")
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      errorResponse.send(res, error.message )
     }};
 
 const getOneDBWithFileDetails  = async (req, res)=> {
@@ -82,10 +83,10 @@ const getAllDBWithSpecificAttribute = async (req, res) => {
   Promise.all(promises).then(results => {
     const data = {listCollections: results,};
       if(results.length > 0) {
-        res.status(200).json(data)
+        successResponse.send(res, data)
       }
       else {
-        res.status(400).json(["erreur"])
+        errorResponse.send(res, ["erreur"])
       }
   });});};
   
@@ -111,10 +112,10 @@ const getAllDB = async (req, res) => {
     Promise.all(promises).then(results => {
       const data = {listCollections: results};
       if(results.length > 0) {
-        res.status(200).json(data)
+        successResponse.send(res, data)
       }
       else {
-        res.status(400).json(["erreur"])
+        errorResponse.send(res, ["erreur"])
       }
   });});};
 module.exports = {addDB, deleteDB, updateDB, getAllDB, getOneDBWithFileDetails, getAllDBWithSpecificAttribute}

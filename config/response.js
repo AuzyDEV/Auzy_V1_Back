@@ -1,4 +1,9 @@
 const JsonResponse = require("./json-response");
 const error = new Error('Something went wrong');
-errorResponse = new JsonResponse(400, error.message);
-module.exports = errorResponse; 
+const successResponse = new JsonResponse(200, "Success");
+const succesSendRequest = new JsonResponse(201, "Success sended!");
+const errorResponse = new JsonResponse(400, error.message);
+const errorNotFound = new JsonResponse(404, error.message)
+const errorUnauthorised  = new JsonResponse(401, error.message);
+const errorServer = new JsonResponse(500, error.message);
+module.exports = {errorResponse, errorNotFound, errorUnauthorised, errorServer, successResponse, succesSendRequest}; 

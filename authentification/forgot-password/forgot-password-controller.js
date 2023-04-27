@@ -1,8 +1,9 @@
-const firebase = require("../../db");
+const { successResponse } = require("../../config/response");
+const firebase = require("../../config/db");
 const sendResetEmail = async (req, res, next) => {
   firebase.auth().sendPasswordResetEmail(req.body.email).then(() => { 
-    res.status(200).json({ message: "email reset password send!" });
+    successResponse.send(res, "email reset password send!")
   }).catch((error) => {
-    res.status(400).json({ message: error.message});
+    errorResponse.send(res, error.message );
 });}
 module.exports = {sendResetEmail,}

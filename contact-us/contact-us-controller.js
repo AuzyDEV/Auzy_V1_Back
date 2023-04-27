@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const sendEmail = require('../config/email');
+const { errorResponse, successResponse } = require('../config/response');
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");
 const sendMailOverHTTP = functions.https.onRequest(async (req, res) => {
@@ -14,8 +15,8 @@ try {
             <b>User's mobile: </b>${req.body.mobile}<br>
             <b>Message: </b>${req.body.message}<br></p>`
     });
-    return res.status(200).json({ message: "email send!" });
+    successResponse.send(res, "email send!")
     } catch (error) {
-    return res.status(400).json({ message: error.message });
+    errorResponse.send(res, error.message);
   }});
 module.exports = {sendMailOverHTTP,}

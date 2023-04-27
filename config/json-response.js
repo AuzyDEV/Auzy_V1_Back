@@ -3,7 +3,9 @@ class JsonResponse {
     this.status = status;
     this.message = message;
   }
-  send(res) {
-    return res.status(this.status).json({ message: this.message });
-  }};
+  send(res, customMessage) {
+    const Message = customMessage || this.message;
+    return res.status(this.status).json({ message: Message });
+  }
+};
 module.exports = JsonResponse;

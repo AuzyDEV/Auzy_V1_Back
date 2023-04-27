@@ -9,8 +9,8 @@ const deleteFileFromDownloadURLForPost = async(req, res) => {
   const resultString = fileUrl.substring(startIndex, endIndex);
   const file = bucket.file(resultString);
   file.delete().then(() => {
-    res.status(200).send({message: "file deleted"})
+    successResponse.send(res, "file deleted")
   }).catch((error) => {
-    res.status(400).send({message: error})
+    errorResponse.send(res, error);
   });}
 module.exports = {deleteFileFromDownloadURLForPost}

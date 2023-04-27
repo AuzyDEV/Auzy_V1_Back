@@ -1,4 +1,5 @@
 const firebase = require("../../config/db");
+const { succesSendRequest, errorResponse, successResponse } = require("../../config/response");
 const fireStore = firebase.firestore();
 const savedPost = require("./saved-posts-model");
 const admin = require('firebase-admin');
@@ -13,9 +14,9 @@ const SavePost = async (req, res) => {
       uphoto: req.body.uphoto,
       currentUserId: req.body.currentUserId
     });
-    res.status(201).json({ message: "post saved successfully" });
+    succesSendRequest.send(res, "post saved successfully")
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    errorResponse.send(res,error.message)
   }
 };
 
@@ -41,7 +42,7 @@ const getAllSavedPostsAndTheirFiles = async(req,res)=> {
       });});
     Promise.all(promises).then(results => {
       const data = {posts: results,};
-      res.json(data)
+      successResponse.send(res, data)
     });
   });
 }
@@ -68,10 +69,10 @@ const getAllSavedPosts = async (req, res) => {
         arr.push(savedpost);
         total = total + 1;
       });
-      res.status(200).json(arr);
+      successResponse.send(res, arr)
     }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    errorResponse.send(res, error.message );
   }};
 
 const deleteSavedPost = async (req,res) => {
@@ -80,9 +81,9 @@ const deleteSavedPost = async (req,res) => {
   query.get().then(querySnapshot => {
     querySnapshot.forEach(doc => {
     doc.ref.delete().then(() => {
-      res.status(200).json({ message: "post deleted successfully" })
+      successResponse.send(res, "post deleted successfully")
     }).catch(error => {
-      res.status(400).json({ message: error.message});
+      errorResponse.send(res, error.message );
     });
   });
 }).catch(error => {
@@ -93,10 +94,10 @@ const countSavedPosts = async (req, res) => {
   fireStore.collection("savedPosts").where('currentUserId', '==', req.params.currentUserId).get()
   .then((snapshot) => {
     const savedPostCount = snapshot.size;
-    res.status(200).json({count: savedPostCount})
+    successResponse.send(res, {count: savedPostCount})
   })
   .catch((error) => {
-    res.status(400).json({message: error.message})
+    errorResponse.send(res, error.message );
   });
  }
 module.exports = { SavePost, getAllSavedPosts, deleteSavedPost, countSavedPosts, getAllSavedPostsAndTheirFiles,}

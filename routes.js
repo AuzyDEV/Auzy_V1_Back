@@ -12,6 +12,7 @@ const postManRoutes = require("./admin-functions/post-management/post-management
 const UserManRoutes = require("./admin-functions/user-management/user-management-routes")
 const loginRoutes = require("./authentification/login/login-routes")
 const createaccountRoutes = require("./authentification/create-account/create-account-routes")
+const forgetPasswordRoutes = require("./authentification/forgot-password/forgot-password-routes")
 module.exports = function(app) {
     app.use("/api", mailborodcastRoutes.routes);
     app.use("/api", postManRoutes.routes);
@@ -27,4 +28,5 @@ module.exports = function(app) {
     app.use("/api", filesRoutes.routes);
     app.use("/api", mailingRoutes.routes);
     app.use("/api", messagingRoutes.routes);
+    app.use("/api",forgetPasswordRoutes.routes);
   };

@@ -1,19 +1,21 @@
 const firebase = require("../config/db");
 const { getAuth} = require('firebase-admin/auth');
+const { errorResponse, successResponse } = require("../config/response");
 const sendVerificationEmail = async (req, res) => {
   const user = firebase.auth().currentUser;
   user.sendEmailVerification().then(() => { 
-    res.status(200).json({ message: "email adress confirmation send!" });
+    successResponse.send(res, "email adress confirmation send!")
   }).catch((error) => {
-    res.status(400).json({ message: error.message });
+    errorResponse.send(res, error.message);
   });
 }
 const getCurrentUser = async (req, res) => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+      successResponse.send(res, [user])
       res.status(200).json([user]);
     } else {
-      res.status(400).json({ message: "User is signed out" });
+      errorResponse.send(res, "User is signed out");
     }
   });
 }

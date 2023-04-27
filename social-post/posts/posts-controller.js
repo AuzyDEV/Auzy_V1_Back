@@ -2,6 +2,7 @@ const firebase = require("../../config/db");
 const fireStore = firebase.firestore();
 const Post = require("../../admin-functions/post-management/post-management-model");
 const admin = require('firebase-admin');
+const { successResponse, errorServer } = require("../../config/response");
 
 const getPostsForUsers = async (req, res) => {
   let listposts = [];
@@ -54,7 +55,8 @@ const getAllPostsAndTheirFiles = async(req, res)=> {
     });
   });
   Promise.all(promises).then(results => {const data = {posts: results,};
-    res.json(data)
+    //res.json(data)
+    successResponse.send(res, data)
     });
   });}
 
@@ -71,7 +73,7 @@ const getOnePostWithFileDetails  = async (req, res)=> {
     files.push({downloadURL: url});
   }
   const response = {data,files};
-return res.json(response)
+return successResponse.send(res, response)
 }
 
 const getAllPostsAndFiles = async(req, res)=>{
@@ -88,7 +90,7 @@ const getAllPostsAndFiles = async(req, res)=>{
         .then(data => {
           info.push({data});
         }).then(() => {
-          res.status(200).send(info)})}
+          successResponse.send(res, info)})}
       )}
     )});
   });
@@ -121,21 +123,21 @@ const getSavedPostWithBoolAttributeAndTheirFiles = async (req, res) => {
               });})
               .then(() => {
                 if (posts.length === snapshots.length) {
-                  res.json({ posts });
+                  successResponse.send(res, { posts })
                 }
               })})
             }).catch((error) => {
-              res.status(500).json({ error });
+              errorServer.send(res, { error });
             });})
           .catch((error) => {
-            res.status(500).json({ error });
+            errorServer.send(res, { error });
           });});
       })
       .catch((error) => {
-        res.status(500).json({ error });});
+        errorServer.send(res, { error });});
   })
   .catch((error) => {
-    res.status(500).json({ error });
+    errorServer.send(res, { error });
   });
 }
 module.exports = { getPostsForUsers, getAllPostsAndFiles, getAllPostsAndTheirFiles, getOnePostWithFileDetails, getSavedPostWithBoolAttributeAndTheirFiles,}
