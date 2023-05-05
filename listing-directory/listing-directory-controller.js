@@ -46,7 +46,7 @@ const getOneDBWithFileDetails  = async (req, res)=> {
   const bucket = admin.storage().bucket();
   const document = fireStore.collection(collectionName).doc(req.params.id);
   const documentSnapshot = await document.get();
-  const data = documentSnapshot.data();
+  const listings = documentSnapshot.data();
   const folder = req.params.id;
   const [allfiles] = await bucket.getFiles({ prefix: `${collectionName}/${folder}/` });
   const files = [];
@@ -54,7 +54,7 @@ const getOneDBWithFileDetails  = async (req, res)=> {
     const [url] = await file.getSignedUrl({ action: 'read', expires: '03-17-2025' });
     files.push({downloadURL: url});
   }
-  const response = {data,files};
+  const response = {listings,files};
     return res.json(response)
 }
 
@@ -81,9 +81,9 @@ const getAllDBWithSpecificAttribute = async (req, res) => {
       });
     });
   Promise.all(promises).then(results => {
-    const data = {listCollections: results,};
+    const listings = {listCollections: results,};
       if(results.length > 0) {
-        successResponse.send(res, data)
+        successResponse.send(res, listings)
       }
       else {
         errorResponse.send(res, ["erreur"])
@@ -110,9 +110,9 @@ const getAllDB = async (req, res) => {
         return {...docData, files};});
       });});});
     Promise.all(promises).then(results => {
-      const data = {listCollections: results};
+      const listings = {listCollections: results};
       if(results.length > 0) {
-        successResponse.send(res, data)
+        successResponse.send(res, listings)
       }
       else {
         errorResponse.send(res, ["erreur"])

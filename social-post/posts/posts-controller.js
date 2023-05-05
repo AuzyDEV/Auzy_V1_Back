@@ -54,9 +54,9 @@ const getAllPostsAndTheirFiles = async(req, res)=> {
       });
     });
   });
-  Promise.all(promises).then(results => {const data = {posts: results,};
+  Promise.all(promises).then(results => {const posts = {posts: results,};
     //res.json(data)
-    successResponse.send(res, data)
+    successResponse.send(res, posts)
     });
   });}
 
@@ -64,7 +64,7 @@ const getOnePostWithFileDetails  = async (req, res)=> {
   const bucket = admin.storage().bucket();
   const document = fireStore.collection("posts").doc(req.params.id);
   const documentSnapshot = await document.get();
-  const data = documentSnapshot.data();
+  const post = documentSnapshot.data();
   const folder = req.params.id;
   const [allfiles] = await bucket.getFiles({ prefix: `posts/${folder}/` });
   const files = [];
@@ -72,12 +72,12 @@ const getOnePostWithFileDetails  = async (req, res)=> {
     const [url] = await file.getSignedUrl({ action: 'read', expires: '03-17-2025' });
     files.push({downloadURL: url});
   }
-  const response = {data,files};
+  const response = {post,files};
 return successResponse.send(res, response)
 }
 
 const getAllPostsAndFiles = async(req, res)=>{
-  let info = [];
+  let postList = [];
   fireStore.collection("posts").where("visibility", "==", false).orderBy('date', 'desc').get()
   .then(function(querySnapshot) {
     const bucket = admin.storage().bucket();
@@ -87,10 +87,10 @@ const getAllPostsAndFiles = async(req, res)=>{
       const ids = snapshot.docs.map(doc => doc.id);
       bucket.getFiles({prefix: `${id}/`}).then( ([files]) => {
         files.forEach(file => {file.getSignedUrl({action: "read",expires: "03-09-2491"})
-        .then(data => {
-          info.push({data});
+        .then(posts => {
+          info.push({posts});
         }).then(() => {
-          successResponse.send(res, info)})}
+          successResponse.send(res, postList)})}
       )}
     )});
   });

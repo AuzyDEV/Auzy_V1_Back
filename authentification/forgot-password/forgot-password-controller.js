@@ -4,6 +4,6 @@ const sendResetEmail = async (req, res, next) => {
   firebase.auth().sendPasswordResetEmail(req.body.email).then(() => { 
     successResponse.send(res, "email reset password send!")
   }).catch((error) => {
-    errorResponse.send(res, error.message );
+    errorResponse.send(res, error.message);
 });}
 module.exports = {sendResetEmail,}

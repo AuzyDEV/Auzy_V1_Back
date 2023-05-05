@@ -32,13 +32,13 @@ const SharePost = async (req, res, next) => {
 const getAllSharedPostsByCurrentUserId = async (req, res) => {
   try {
     const sharedposts = await fireStore.collection("sharedPosts").where('idSharedUser', '==', req.params.idSharedUser);
-    const data = await sharedposts.get();
+    const sharedPosts = await sharedposts.get();
     const sharedpostslist = [];
-      if (data.empty) {
+      if (sharedPosts.empty) {
         res.status(404).json({ message: "No posts found" });
       } else {
         let total = 0;
-        data.forEach((item) => {
+        sharedPosts.forEach((item) => {
           const sharedpost = new sharedPost(
             item.id,
             item.data().postId,

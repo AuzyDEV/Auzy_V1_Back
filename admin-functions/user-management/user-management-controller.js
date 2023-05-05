@@ -40,12 +40,12 @@ const getUserInfos = async (req, res) => {
 const getUserRole = async (req, res) => {
   getAuth().getUser(req.params.uid).then(async (userRecord) => {
     const user = await fireStore.collection("users").doc(req.params.uid);
-    const data = await user.get();
-    if (!data.exists) {
+    const userDetails = await user.get();
+    if (!userDetails.exists) {
       errorNotFound.send(res,"Record not found")
     } else {
       const obj2 = JSON.parse(JSON.stringify(userRecord));
-      const obj3 = JSON.parse(JSON.stringify(data.data()));
+      const obj3 = JSON.parse(JSON.stringify(userDetails.data()));
       const mergedObj = Object.assign(obj2,obj3);
       const jsonStr = JSON.stringify(mergedObj);
       const result = JSON.parse(jsonStr);
@@ -85,12 +85,12 @@ const deleteOneUser = async (req, res) => {
 const getUserInfoswithIpAdress = async (req, res) => {
   getAuth().getUser(req.params.uid).then(async (userRecord) => {
     const user = await fireStore.collection("users").doc(req.params.uid);
-    const data = await user.get();
-    if (!data.exists) {
+    const userDetails = await user.get();
+    if (!userDetails.exists) {
       errorNotFound.send(res, "Record not found")
     } else {
       const obj2 = JSON.parse(JSON.stringify(userRecord));
-      const obj3 = JSON.parse(JSON.stringify(data.data()));
+      const obj3 = JSON.parse(JSON.stringify(userDetails.data()));
       const mergedObj = Object.assign(obj2,obj3);
       const jsonStr = JSON.stringify(mergedObj);
       const result = JSON.parse(jsonStr);

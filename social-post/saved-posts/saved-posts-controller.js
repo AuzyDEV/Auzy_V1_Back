@@ -41,8 +41,8 @@ const getAllSavedPostsAndTheirFiles = async(req,res)=> {
           });});
       });});
     Promise.all(promises).then(results => {
-      const data = {posts: results,};
-      successResponse.send(res, data)
+      const savedPosts = {posts: results,};
+      successResponse.send(res, savedPosts)
     });
   });
 }
@@ -50,13 +50,13 @@ const getAllSavedPostsAndTheirFiles = async(req,res)=> {
 const getAllSavedPosts = async (req, res) => {
   try {
     const posts = await fireStore.collection("savedPosts").where('currentUserId', '==', req.params.currentUserId);
-    const data = await posts.get();
-    const arr = [];
-    if (data.empty) {
+    const savedPosts = await posts.get();
+    const savedList = [];
+    if (savedPosts.empty) {
       res.status(200).json({ message: "No posts found" });
     } else {
       let total = 0;
-      data.forEach((item) => {
+      savedPosts.forEach((item) => {
         const savedpost = new savedPost(
           item.id,
           item.data().postId,
@@ -66,10 +66,10 @@ const getAllSavedPosts = async (req, res) => {
           item.data().uname,
           item.data().uphoto,
         );
-        arr.push(savedpost);
+        savedList.push(savedpost);
         total = total + 1;
       });
-      successResponse.send(res, arr)
+      successResponse.send(res, savedList)
     }
   } catch (error) {
     errorResponse.send(res, error.message );
