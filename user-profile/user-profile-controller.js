@@ -13,7 +13,6 @@ const getCurrentUser = async (req, res) => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       successResponse.send(res, [user])
-      res.status(200).json([user]);
     } else {
       errorResponse.send(res, "User is signed out");
     }

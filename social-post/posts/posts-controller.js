@@ -55,7 +55,6 @@ const getAllPostsAndTheirFiles = async(req, res)=> {
     });
   });
   Promise.all(promises).then(results => {const posts = {posts: results,};
-    //res.json(data)
     successResponse.send(res, posts)
     });
   });}

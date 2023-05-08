@@ -25,13 +25,13 @@ const addPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     const posts = await fireStore.collection("posts");
-    const data = await posts.get();
+    const postsList = await posts.get();
     const arr = [];
-    if (data.empty) {
+    if (postsList.empty) {
       errorNotFound.send(res,"No posts found" )
     } else {
       let total = 0;
-      data.forEach((item) => {
+      postsList.forEach((item) => {
       const post = new Post(
         item.id,
         item.data().title,
@@ -52,11 +52,11 @@ const getAllPosts = async (req, res) => {
 const getPostById = async (req, res) => {
   try {
     const post = await fireStore.collection("posts").doc(req.params.id);
-    const data = await post.get();
-    if (!data.exists) {
+    const postDetails = await post.get();
+    if (!postDetails.exists) {
       errorNotFound.send(res, "Record not found");
     } else {
-      res.status(200).json([data.data()]);}
+      res.status(200).json([postDetails.data()]);}
   } catch (error) {
     errorResponse.send(res, error.message)
   }};
