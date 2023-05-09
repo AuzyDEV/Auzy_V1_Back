@@ -23,7 +23,7 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   firebase.auth().signOut().then(() => {
-    res.status(200).json({ message: "User logout successfully" });
+    res.status(200).json({ message: "User logout successfully"});
   }).catch((error) => {
     res.status(400).json({ message:  error.message });
   });}

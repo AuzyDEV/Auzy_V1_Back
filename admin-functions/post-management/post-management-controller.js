@@ -22,6 +22,33 @@ const addPost = async (req, res) => {
   } catch (error) {
     console.log(error);}};
 
+const getAllpostsNew = async (req, res) => {
+      const bucket = admin.storage().bucket();
+      fireStore.collection("posts").get().then(snapshot => {
+      const ids = snapshot.docs.map(doc => doc.id);
+      const promises = ids.map(id => {
+        return fireStore.collection("posts").doc(id).get().then(doc => {
+        return {id,data: doc.data(),};})
+        .then(docData => {
+          return bucket.getFiles({prefix: `posts/${id}/`,})
+          .then(results => {
+            const filePromises = results[0].map(file => {
+              return file.getSignedUrl({action: 'read',expires: '03-17-2025',}).then(signedUrls => {
+                return {name: file.name, downloadURL: signedUrls[0]};
+              });
+            });
+          return Promise.all(filePromises).then(files => {
+            return {...docData, files};});
+          });});});
+        Promise.all(promises).then(results => {
+          const listings = {listCollections: results};
+          if(results.length > 0) {
+            successResponse.send(res, listings)
+          }
+          else {
+            errorResponse.send(res, ["erreur"])
+          }
+      });});};
 const getAllPosts = async (req, res) => {
   try {
     const posts = await fireStore.collection("posts");
@@ -101,4 +128,4 @@ const deletePost = async (req, res) => {
   } catch (error) {
     errorResponse.send(res, error.message)
   }};
-module.exports = {addPost, getAllPosts, getPostById, updatePost, deletePost, updatePostVisisbilityToFalse, updatePostVisibilityToTrue,}
+module.exports = {getAllpostsNew, addPost, getAllPosts, getPostById, updatePost, deletePost, updatePostVisisbilityToFalse, updatePostVisibilityToTrue,}

@@ -63,7 +63,7 @@ const getOnePostWithFileDetails  = async (req, res)=> {
   const bucket = admin.storage().bucket();
   const document = fireStore.collection("posts").doc(req.params.id);
   const documentSnapshot = await document.get();
-  const post = documentSnapshot.data();
+  const data = documentSnapshot.data();
   const folder = req.params.id;
   const [allfiles] = await bucket.getFiles({ prefix: `posts/${folder}/` });
   const files = [];
@@ -71,7 +71,7 @@ const getOnePostWithFileDetails  = async (req, res)=> {
     const [url] = await file.getSignedUrl({ action: 'read', expires: '03-17-2025' });
     files.push({downloadURL: url});
   }
-  const response = {post,files};
+  const response = {data,files};
 return successResponse.send(res, response)
 }
 
