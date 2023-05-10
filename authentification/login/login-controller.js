@@ -2,17 +2,15 @@ const firebase = require("../../config/db");
 const firebasee = require('firebase');
 const { errorNotFound, successResponse } = require("../../config/response");
 const login = async (req, res) => {
-  firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password).then(async (userCredential) => {
-  firebase.auth().onAuthStateChanged(
-    async function(user) {
+  firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password).then( async (userCredential) => {
+    const user = userCredential.user;
       if(user.emailVerified == true){
         token = await userCredential.user.getIdToken();
-        console.log(token)
         successResponse.send(res, "User signin successfully")
     }
       else {
         errorNotFound.send(res, "no confirmation email");
-      }})
+      }
   })
   .catch((error) => {
     if (error.code === 'auth/user-not-found')
@@ -21,11 +19,11 @@ const login = async (req, res) => {
     res.status(500).json({ message: error.message });
 });}
 
-const logout = async (req, res) => {
-  firebase.auth().signOut().then(() => {
-    res.status(200).json({ message: "User logout successfully"});
+const logout =  (req, res) => {
+   firebase.auth().signOut().then(() => {
+    successResponse.send(res, "User logout successfully")
   }).catch((error) => {
-    res.status(400).json({ message:  error.message });
+    errorResponse.send(res, error.message);
   });}
 
 const signInWithGoogle = async (req, res) => {
