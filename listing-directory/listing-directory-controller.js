@@ -46,7 +46,12 @@ const getOneDBWithFileDetails  = async (req, res)=> {
   const bucket = admin.storage().bucket();
   const document = fireStore.collection(collectionName).doc(req.params.id);
   const documentSnapshot = await document.get();
+  const id = documentSnapshot.id; 
   const data = documentSnapshot.data();
+  const combinedData = {
+    id: id,
+    data: data
+  };
   const folder = req.params.id;
   const [allfiles] = await bucket.getFiles({ prefix: `${collectionName}/${folder}/` });
   const files = [];
@@ -54,7 +59,7 @@ const getOneDBWithFileDetails  = async (req, res)=> {
     const [url] = await file.getSignedUrl({ action: 'read', expires: '03-17-2025' });
     files.push({downloadURL: url});
   }
-  const response = {data,files};
+  const response = {combinedData,files};
     return res.json(response)
 }
 

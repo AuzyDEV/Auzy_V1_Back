@@ -44,9 +44,9 @@ const getUserRole = async (req, res) => {
     if (!userDetails.exists) {
       errorNotFound.send(res,"Record not found")
     } else {
-      const obj2 = JSON.parse(JSON.stringify(userRecord));
-      const obj3 = JSON.parse(JSON.stringify(userDetails.data()));
-      const mergedObj = Object.assign(obj2,obj3);
+      const resp = JSON.parse(JSON.stringify(userRecord));
+      const userresp = JSON.parse(JSON.stringify(userDetails.data()));
+      const mergedObj = Object.assign(resp,userresp);
       const jsonStr = JSON.stringify(mergedObj);
       const result = JSON.parse(jsonStr);
       successResponse.send(res, [result["role"]])
@@ -89,9 +89,9 @@ const getUserInfoswithIpAdress = async (req, res) => {
     if (!userDetails.exists) {
       errorNotFound.send(res, "Record not found")
     } else {
-      const obj2 = JSON.parse(JSON.stringify(userRecord));
-      const obj3 = JSON.parse(JSON.stringify(userDetails.data()));
-      const mergedObj = Object.assign(obj2,obj3);
+      const resp = JSON.parse(JSON.stringify(userRecord));
+      const userresp = JSON.parse(JSON.stringify(userDetails.data()));
+      const mergedObj = Object.assign(resp,userresp);
       const jsonStr = JSON.stringify(mergedObj);
       const result = JSON.parse(jsonStr);
       successResponse.send(res, [result])

@@ -11,8 +11,11 @@ const signUp = async (req, res) => {
       fireStore.collection("users").doc(user.uid).set({ipadress: req.body.ipadress,role: "user"})
       getAuth().updateUser(user.uid, {displayName: req.body.displayName,photoURL: req.body.photoURL,})
       .then((userRecord) => {
-        console.log(JSON.stringify(userRecord))
-        successResponse.send(res, "User registred & email send successfully")
+       /* const combinedData = {
+          result: "User registred & email send successfully",
+          data: user.uid
+        };*/
+        successResponse.send(res, user.uid)
       })
       .catch((error) => {
         errorResponse.send(res, error.message ); 
