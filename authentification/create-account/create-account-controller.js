@@ -11,11 +11,11 @@ const signUp = async (req, res) => {
       fireStore.collection("users").doc(user.uid).set({ipadress: req.body.ipadress,role: "user"})
       getAuth().updateUser(user.uid, {displayName: req.body.displayName,photoURL: req.body.photoURL,})
       .then((userRecord) => {
-       /* const combinedData = {
+        const combinedData = {
           result: "User registred & email send successfully",
           data: user.uid
-        };*/
-        successResponse.send(res, user.uid)
+        };
+        successResponse.send(res, combinedData)
       })
       .catch((error) => {
         errorResponse.send(res, error.message ); 
@@ -25,7 +25,10 @@ const signUp = async (req, res) => {
       });
     }).catch((error) => {
       if (error.code === 'auth/email-already-in-use')
-        errorResponse.send(res, error.message ); 
+        errorResponse.send(res, {
+          result: error.message,
+          data: null
+        } ); 
       else
         errorServer.send(res, error.message);
     });
