@@ -7,6 +7,7 @@ assert(HOST_URL, "Service endpoint is required");
 assert(DATABASE_URL, "Firebase database endpoint is required");
 assert(PROJECT_ID, "Firebase project id is required");
 assert(APP_ID, "Firebase app id is required");
+
 module.exports = {port: PORT,host: HOST,url: HOST_URL,
   firebaseConfig: {
     apiKey: API_KEY,

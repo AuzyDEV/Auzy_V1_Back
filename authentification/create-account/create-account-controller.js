@@ -4,8 +4,8 @@ const { getAuth} = require('firebase-admin/auth');
 const {errorResponse, errorUnauthorised, errorServer, errorNotFound, successResponse} = require("../../config/response")
 
 const signUp = async (req, res) => {
-    firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.password)
-    .then((userCredential) => {
+  firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.password)
+  .then((userCredential) => {
     var user = userCredential.user;
     user.sendEmailVerification().then(() => {
       fireStore.collection("users").doc(user.uid).set({ipadress: req.body.ipadress,role: "user"})
@@ -15,23 +15,21 @@ const signUp = async (req, res) => {
           result: "User registred & email send successfully",
           data: user.uid
         };
-        successResponse.send(res, combinedData)
+      successResponse.send(res, combinedData)
       })
       .catch((error) => {
         errorResponse.send(res, error.message ); 
       });
-      }).catch((error) => {
-        errorUnauthorised.send(res, error.message)
-      });
-    }).catch((error) => {
+    })
+    .catch((error) => {
+      errorUnauthorised.send(res, error.message)
+    });
+  }).catch((error) => {
       if (error.code === 'auth/email-already-in-use')
-        errorResponse.send(res, {
-          result: error.message,
-          data: null
-        } ); 
+        errorResponse.send(res, {result: error.message,data: null}); 
       else
         errorServer.send(res, error.message);
     });
- }
+}
 
 module.exports = {signUp}

@@ -13,4 +13,5 @@ class savedPost {
     this.currentUserId = currentUserId;
   }
 }
+
 module.exports = savedPost;

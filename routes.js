@@ -14,19 +14,19 @@ const loginRoutes = require("./authentification/login/login-routes")
 const createaccountRoutes = require("./authentification/create-account/create-account-routes")
 const forgetPasswordRoutes = require("./authentification/forgot-password/forgot-password-routes")
 module.exports = function(app) {
-    app.use("/api", mailborodcastRoutes.routes);
-    app.use("/api", postManRoutes.routes);
-    app.use("/api", UserManRoutes.routes);
-    app.use("/api", loginRoutes.routes);
-    app.use("/api", createaccountRoutes.routes);
-    app.use("/api", postsRoutes.routes);
-    app.use("/api", savedPostRoutes.routes);
-    app.use("/api", sharedPostRoutes.routes);
-    app.use("/api", DataBaseCollectionRoutes.routes);
-    app.use("/api", notifRoutes.routes);
-    app.use("/api", userProfilRoutes.routes);
-    app.use("/api", filesRoutes.routes);
-    app.use("/api", mailingRoutes.routes);
-    app.use("/api", messagingRoutes.routes);
-    app.use("/api",forgetPasswordRoutes.routes);
-  };
+  app.use("/api", mailborodcastRoutes.routes);
+  app.use("/api", postManRoutes.routes);
+  app.use("/api", UserManRoutes.routes);
+  app.use("/api", loginRoutes.routes);
+  app.use("/api", createaccountRoutes.routes);
+  app.use("/api", postsRoutes.routes);
+  app.use("/api", savedPostRoutes.routes);
+  app.use("/api", sharedPostRoutes.routes);
+  app.use("/api", DataBaseCollectionRoutes.routes);
+  app.use("/api", notifRoutes.routes);
+  app.use("/api", userProfilRoutes.routes);
+  app.use("/api", filesRoutes.routes);
+  app.use("/api", mailingRoutes.routes);
+  app.use("/api", messagingRoutes.routes);
+  app.use("/api",forgetPasswordRoutes.routes);
+};

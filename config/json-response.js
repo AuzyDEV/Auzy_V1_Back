@@ -8,4 +8,5 @@ class JsonResponse {
     return res.status(this.status).json({ message: Message });
   }
 };
+
 module.exports = JsonResponse;

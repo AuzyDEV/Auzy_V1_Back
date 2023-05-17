@@ -21,16 +21,18 @@ const getPostsForUsers = async (req, res) => {
           item.data().uname,
           item.data().uphoto,
         );
-      listposts.push(post)
-    });
-      res.status(200).json({posts: listposts})
+        listposts.push(post)
+      });
+    res.status(200).json({posts: listposts})
     })
     .catch(err => {
       console.log("Error getting documents", err);
     });
   } catch (error) {
     console.log(error.message)
-  }};
+  }
+};
+
 
 const getAllPostsAndTheirFiles = async(req, res)=> {
   const bucket = admin.storage().bucket();
@@ -38,9 +40,11 @@ const getAllPostsAndTheirFiles = async(req, res)=> {
   .then(snapshot => {
     const ids = snapshot.docs.map(doc => doc.id);
     const promises = ids.map(id => {
-      return fireStore.collection('posts').doc(id).get().then(doc => {
+      return fireStore.collection('posts').doc(id).get()
+      .then(doc => {
         return {id,data: doc.data(),};
-      }).then(docData => {
+      })
+      .then(docData => {
         return bucket.getFiles({prefix: `posts/${id}/`,}).then(results => {
           const filePromises = results[0].map(file => {
             return file.getSignedUrl({action: 'read',expires: '03-17-2025',})
@@ -48,18 +52,21 @@ const getAllPostsAndTheirFiles = async(req, res)=> {
               return {name: file.name, downloadURL: signedUrls[0]};
             });
           });
-        return Promise.all(filePromises).then(files => {
-          return {...docData, files};
+          return Promise.all(filePromises).then(files => {
+            return {...docData, files};
+          });
         });
       });
     });
-  });
-  Promise.all(promises).then(results => {const posts = {posts: results,};
-    successResponse.send(res, posts)
+    Promise.all(promises).then(results => {
+      const posts = {posts: results,};
+      successResponse.send(res, posts)
     });
-  });}
+  });
+}
 
-const getOnePostWithFileDetails  = async (req, res)=> {
+
+const getOnePostWithFileDetails  = async (req, res) => {
   const bucket = admin.storage().bucket();
   const document = fireStore.collection("posts").doc(req.params.id);
   const documentSnapshot = await document.get();
@@ -72,28 +79,34 @@ const getOnePostWithFileDetails  = async (req, res)=> {
     files.push({downloadURL: url});
   }
   const response = {data,files};
-return successResponse.send(res, response)
+  return successResponse.send(res, response)
 }
 
-const getAllPostsAndFiles = async(req, res)=>{
+
+const getAllPostsAndFiles = async(req, res) => {
   let postList = [];
   fireStore.collection("posts").where("visibility", "==", false).orderBy('date', 'desc').get()
   .then(function(querySnapshot) {
     const bucket = admin.storage().bucket();
-    querySnapshot.forEach( (doc) => {
+    querySnapshot.forEach((doc) => {
       var data = doc.data();
       var id = doc.id;
       const ids = snapshot.docs.map(doc => doc.id);
       bucket.getFiles({prefix: `${id}/`}).then( ([files]) => {
-        files.forEach(file => {file.getSignedUrl({action: "read",expires: "03-09-2491"})
-        .then(posts => {
-          info.push({posts});
-        }).then(() => {
-          successResponse.send(res, postList)})}
-      )}
-    )});
+        files.forEach(file => { 
+          file.getSignedUrl({action: "read",expires: "03-09-2491"})
+          .then(posts => {
+              info.push({posts});
+          })
+          .then(() => {
+              successResponse.send(res, postList)
+          })
+        })
+      })
+    });
   });
 }
+
 
 const getSavedPostWithBoolAttributeAndTheirFiles = async (req, res) => {
   const firstCollection =  fireStore.collection('posts');
@@ -101,42 +114,50 @@ const getSavedPostWithBoolAttributeAndTheirFiles = async (req, res) => {
   firstCollection.where("visibility", "==", true).get()
   .then((snapshot) => {
     let ids = [];
-    snapshot.forEach((doc) => {ids.push(doc.id);});
+    snapshot.forEach((doc) => {
+      ids.push(doc.id);
+    });
     let promises = ids.map((id) => {
       return secondCollection.where("postId", "==", id).where("currentUserId", "==", req.params.currentUserId).get();
     });
     Promise.all(promises).then((snapshots) => {
       let posts = [];
       snapshots.forEach((snapshot, index) => {
-      let existsInCollection2 = !snapshot.empty;
-      firstCollection.doc(ids[index]).get().then((doc) => {
-        const bucket = admin.storage().bucket();
-        bucket.getFiles({prefix: `posts/${ids[index]}/`}).then( ([files]) => {
-          files.forEach(file => {
-            file.getSignedUrl({action: "read",expires: "03-09-2491"}).then(data => {
-              posts.push({
-                id: ids[index],
-                data: doc.data(),
-                existsInCollection2,
-                downloadURL: data[0]
-              });})
+        let existsInCollection2 = !snapshot.empty;
+        firstCollection.doc(ids[index]).get().then((doc) => {
+          const bucket = admin.storage().bucket();
+          bucket.getFiles({prefix: `posts/${ids[index]}/`}).then( ([files]) => {
+            files.forEach(file => {
+              file.getSignedUrl({action: "read",expires: "03-09-2491"}).then(data => {
+                posts.push({
+                  id: ids[index],
+                  data: doc.data(),
+                  existsInCollection2,
+                  downloadURL: data[0]
+                });
+              })
               .then(() => {
                 if (posts.length === snapshots.length) {
                   successResponse.send(res, { posts })
                 }
-              })})
-            }).catch((error) => {
+              })
+            })
+          }).catch((error) => {
               errorServer.send(res, { error });
-            });})
-          .catch((error) => {
+            });
+        })
+        .catch((error) => {
             errorServer.send(res, { error });
-          });});
-      })
-      .catch((error) => {
-        errorServer.send(res, { error });});
+        })
+      });
+    })
+    .catch((error) => {
+      errorServer.send(res, { error });
+    });
   })
   .catch((error) => {
     errorServer.send(res, { error });
   });
 }
+
 module.exports = { getPostsForUsers, getAllPostsAndFiles, getAllPostsAndTheirFiles, getOnePostWithFileDetails, getSavedPostWithBoolAttributeAndTheirFiles,}

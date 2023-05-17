@@ -3,6 +3,8 @@ const { succesSendRequest, errorResponse, successResponse } = require("../../con
 const fireStore = firebase.firestore();
 const savedPost = require("./saved-posts-model");
 const admin = require('firebase-admin');
+
+
 const SavePost = async (req, res) => {
   try {
     await fireStore.collection("savedPosts").add(
@@ -20,14 +22,16 @@ const SavePost = async (req, res) => {
   }
 };
 
-const getAllSavedPostsAndTheirFiles = async(req,res)=> {
+
+const getAllSavedPostsAndTheirFiles = async(req,res) => {
   const bucket = admin.storage().bucket();
   fireStore.collection("savedPosts").where('currentUserId', '==', req.params.currentUserId).get().then(snapshot => {
     const ids = snapshot.docs.map(doc => doc.data().postId);
     const promises = ids.map(id => {
       return fireStore.collection('posts').doc(id).get().then(doc => {
         return {id, data: doc.data(),};
-      }).then(docData => {
+      })
+      .then(docData => {
         return bucket.getFiles({prefix: `posts/${id}/`,})
         .then(results => {
           const filePromises = results[0].map(file => {
@@ -38,14 +42,17 @@ const getAllSavedPostsAndTheirFiles = async(req,res)=> {
           });
           return Promise.all(filePromises).then(files => {
             return {...docData, files};
-          });});
-      });});
+          });
+        });
+      });
+    });
     Promise.all(promises).then(results => {
       const savedPosts = {posts: results,};
       successResponse.send(res, savedPosts)
     });
   });
 }
+
 
 const getAllSavedPosts = async (req, res) => {
   try {
@@ -73,22 +80,28 @@ const getAllSavedPosts = async (req, res) => {
     }
   } catch (error) {
     errorResponse.send(res, error.message );
-  }};
+  }
+};
+
 
 const deleteSavedPost = async (req,res) => {
   const collectionRef = fireStore.collection("savedPosts");
   const query = collectionRef.where('postId', '==', req.params.id);
   query.get().then(querySnapshot => {
     querySnapshot.forEach(doc => {
-    doc.ref.delete().then(() => {
-      successResponse.send(res, "post deleted successfully")
-    }).catch(error => {
-      errorResponse.send(res, error.message );
+      doc.ref.delete().then(() => {
+        successResponse.send(res, "post deleted successfully")
+      })
+      .catch(error => {
+        errorResponse.send(res, error.message );
+      });
     });
+  })
+  .catch(error => {
+    console.error('Error getting documents to delete:', error);
   });
-}).catch(error => {
-  console.error('Error getting documents to delete:', error);
-});};
+};
+
 
 const countSavedPosts = async (req, res) => {
   fireStore.collection("savedPosts").where('currentUserId', '==', req.params.currentUserId).get()
@@ -99,5 +112,6 @@ const countSavedPosts = async (req, res) => {
   .catch((error) => {
     errorResponse.send(res, error.message );
   });
- }
+}
+
 module.exports = { SavePost, getAllSavedPosts, deleteSavedPost, countSavedPosts, getAllSavedPostsAndTheirFiles,}

@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");
+
 const deleteFileFromDownloadURLForPost = async(req, res) => {
   const bucket = admin.storage().bucket();
   const fileUrl = req.body.downloadURL
@@ -10,7 +11,10 @@ const deleteFileFromDownloadURLForPost = async(req, res) => {
   const file = bucket.file(resultString);
   file.delete().then(() => {
     successResponse.send(res, "file deleted")
-  }).catch((error) => {
+  })
+  .catch((error) => {
     errorResponse.send(res, error);
-  });}
+  });
+}
+
 module.exports = {deleteFileFromDownloadURLForPost}
