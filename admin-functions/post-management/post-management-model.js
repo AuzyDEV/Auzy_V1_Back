@@ -8,6 +8,6 @@ class Post {
     this.uname = uname;
     this.uphoto = uphoto;
     this.visibility= visibility;
-    }
   }
+}
 module.exports = Post;

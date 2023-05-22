@@ -31,40 +31,40 @@ const addPost = async (req, res) => {
 const getAllpostsNew = async (req, res) => {
   const bucket = admin.storage().bucket();
   fireStore.collection("posts").get().then(snapshot => {
-  const ids = snapshot.docs.map(doc => doc.id);
-    const promises = ids.map(id => {
-      return fireStore.collection("posts").doc(id).get()
-      .then(doc => {
-        return {
-          id,data: doc.data(),
-        };
-      })
-    .then(docData => {
-      return bucket.getFiles({prefix: `posts/${id}/`,})
-        .then(results => {
-          const filePromises = results[0].map(file => {
-            return file.getSignedUrl({action: 'read',expires: '03-17-2025',})
-            .then(signedUrls => {
-              return {name: file.name, downloadURL: signedUrls[0]};
+    const ids = snapshot.docs.map(doc => doc.id);
+      const promises = ids.map(id => {
+        return fireStore.collection("posts").doc(id).get()
+        .then(doc => {
+          return {
+            id,data: doc.data(),
+          };
+        })
+      .then(docData => {
+        return bucket.getFiles({prefix: `posts/${id}/`,})
+          .then(results => {
+            const filePromises = results[0].map(file => {
+              return file.getSignedUrl({action: 'read',expires: '03-17-2025',})
+              .then(signedUrls => {
+                return {name: file.name, downloadURL: signedUrls[0]};
+              });
+            });
+          return Promise.all(filePromises)
+            .then(files => {
+              return {...docData, files};
             });
           });
-        return Promise.all(filePromises)
-          .then(files => {
-            return {...docData, files};
-          });
-        });
+      });
+    });
+    Promise.all(promises).then(results => {
+      const listings = {listCollections: results};
+        if(results.length > 0) {
+          successResponse.send(res, listings)
+        }
+        else {
+          errorResponse.send(res, ["erreur"])
+        }
     });
   });
-  Promise.all(promises).then(results => {
-    const listings = {listCollections: results};
-      if(results.length > 0) {
-        successResponse.send(res, listings)
-      }
-      else {
-        errorResponse.send(res, ["erreur"])
-      }
-  });
-});
 };
 
 
@@ -116,7 +116,7 @@ const updatePost = async (req, res) => {
   try {
     const post = await fireStore.collection("posts").doc(req.params.id);
     await post.update( {title: req.body.title, contenu: req.body.contenu});
-      successResponse.send(res, "Record updated successfully")
+    successResponse.send(res, "Record updated successfully")
   } catch (error) {
       errorResponse.send(res, error.message)
   }
@@ -138,7 +138,7 @@ const updatePostVisibilityToTrue= async (req,res) => {
   try {
     const post = await fireStore.collection("posts").doc(req.params.id);
     await  post.update({visibility: true,});
-      successResponse.send(res, "Record updated successfully")
+    successResponse.send(res, "Record updated successfully")
   } catch (error) {
       errorResponse.send(res, error.message)
   }
@@ -154,9 +154,9 @@ const deletePost = async (req, res) => {
     for (const file of allfiles) {
       await file.delete();
     }
-      successResponse.send(res, "post deleted successfully")
+    successResponse.send(res, "post deleted successfully")
   } catch (error) {
-      errorResponse.send(res, error.message)
+    errorResponse.send(res, error.message)
   }
 };
 

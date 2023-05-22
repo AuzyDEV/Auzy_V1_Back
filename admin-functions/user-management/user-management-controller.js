@@ -39,10 +39,10 @@ const deleteAllUsers = (req, res) => {
 
 const getUserInfos = async (req, res) => {
   getAuth().getUser(req.params.uid).then((userRecord) => {
-    successResponse.send(res, [userRecord])
+  successResponse.send(res, [userRecord])
   })
   .catch((error) => {
-    errorResponse.send(res, error.message)
+  errorResponse.send(res, error.message)
   })
 };
 
@@ -59,7 +59,7 @@ const getUserRole = async (req, res) => {
       const mergedObj = Object.assign(resp,userresp);
       const jsonStr = JSON.stringify(mergedObj);
       const result = JSON.parse(jsonStr);
-        successResponse.send(res, [result["role"]])
+      successResponse.send(res, [result["role"]])
     }
   })
   .catch((error) => {
