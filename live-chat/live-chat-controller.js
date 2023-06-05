@@ -1,5 +1,6 @@
 const firebase = require("../config/db");
 const fireStore = firebase.firestore();
+const admin = require('firebase-admin');
 
 
 const getAllMessages = async (req, res, next) => {
@@ -40,4 +41,27 @@ const getCountMessages = async (req, res) => {
   }
 };
 
-module.exports = {getAllMessages, getCountMessagesByUserId, getCountMessages}
+const hello = async (req, res) => {
+  // Assuming you have the discussions document ID
+const discussionsDocId = 'J22mPStTxWdiIHlJGVAe7gFYpSg1';
+
+// Querying Firestore to find the discussions document
+admin.firestore().collectionGroup('discussions')
+  .where(admin.firestore.FieldPath.documentId(), '==', discussionsDocId)
+  .get()
+  .then((querySnapshot) => {
+    if (!querySnapshot.empty) {
+      const discussionsDoc = querySnapshot.docs[0];
+      const chatDocId = discussionsDoc.ref.parent.parent.id;
+
+      console.log('Chat Document ID:', chatDocId);
+    } else {
+      console.log('Discussions document not found');
+    }
+  })
+  .catch((error) => {
+    console.error('Error retrieving discussions document:', error);
+  });
+}
+
+module.exports = {getAllMessages, getCountMessagesByUserId, getCountMessages, hello}

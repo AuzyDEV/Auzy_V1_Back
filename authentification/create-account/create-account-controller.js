@@ -15,7 +15,7 @@ const signUp = async (req, res) => {
           result: "User registred & email send successfully",
           data: user.uid
         };
-      successResponse.send(res, combinedData)
+        successResponse.send(res, combinedData)
       })
       .catch((error) => {
         errorResponse.send(res, error.message ); 

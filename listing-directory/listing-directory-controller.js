@@ -146,4 +146,15 @@ const getAllDB = async (req, res) => {
   });
 };
 
-module.exports = {addDB, deleteDB, updateDB, getAllDB, getOneDBWithFileDetails, getAllDBWithSpecificAttribute}
+const getAllDBNameAndId = async (req, res) => {
+  const collectionName = req.params.collectionName;
+  const collectionRef = admin.firestore().collection(collectionName);
+  const snapshot = await collectionRef.get();
+  const data = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  res.status(200).json(data);
+};
+
+module.exports = {getAllDBNameAndId, addDB, deleteDB, updateDB, getAllDB, getOneDBWithFileDetails, getAllDBWithSpecificAttribute}

@@ -1,5 +1,5 @@
 const express = require("express");
-const { getUserInfos, getUserInfoswithIpAdress, updateUserinfos, updateUserpassword, deleteOneUser, deleteAllUsers, blockUser, restoreUser, getUserRole, getListofUsersWithRoleUser, getListUsers } = require("./user-management-controller");
+const { getUserInfos, getUserInfoswithIpAdress, updateUserinfos, updateUserpassword, deleteOneUser, deleteAllUsers, blockUser, restoreUser, getUserRole, getListofUsersWithRoleUser, getListUsers, getAssistantUsers } = require("./user-management-controller");
 const router = express.Router();
 router.get("/userinfos/:uid", getUserInfos);
 router.get("/userinfoswithipadress/:uid", getUserInfoswithIpAdress);
@@ -11,5 +11,6 @@ router.put("/blocuser/:uid", blockUser);
 router.put("/restoreuser/:uid", restoreUser);
 router.get("/userole/:uid", getUserRole);
 router.get('/usersrole', getListofUsersWithRoleUser)
+router.get('/assistants', getAssistantUsers)
 router.get("/get", getListUsers);
 module.exports = {routes: router};

@@ -167,4 +167,28 @@ const getListofUsersWithRoleUser = async (req, res) => {
   });
 }
 
-module.exports = {getUserInfos, updateUserinfos, deleteOneUser, getListUsers, updateUserpassword, getUserInfoswithIpAdress, deleteAllUsers, blockUser, restoreUser, getUserRole, getListofUsersWithRoleUser}
+const getAssistantUsers = async (req, res) => {
+  getAuth().listUsers().then((listUsersResult) => {
+    const uids = listUsersResult.users.map((userRecord) => userRecord.uid);
+    const userDocsRef = fireStore.collection('users').where('role', '==', 'assistant');
+    const query = userDocsRef.where(firebasee.firestore.FieldPath.documentId(), 'in', uids);
+    query.get().then((querySnapshot) => {
+      const users = [];
+      querySnapshot.forEach((doc) => {
+        const userRecord = listUsersResult.users.find((user) => user.uid === doc.id);
+        if (userRecord) {
+          users.push({uid: userRecord.uid,email: userRecord.email,displayName: userRecord.displayName,photoURL: userRecord.photoURL,
+          });
+        }
+      })
+      successResponse.send(res,{users: users})
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }).catch((error) => {
+    console.error(error);
+  });
+}
+
+module.exports = {getAssistantUsers, getUserInfos, updateUserinfos, deleteOneUser, getListUsers, updateUserpassword, getUserInfoswithIpAdress, deleteAllUsers, blockUser, restoreUser, getUserRole, getListofUsersWithRoleUser}
