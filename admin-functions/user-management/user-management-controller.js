@@ -191,4 +191,19 @@ const getAssistantUsers = async (req, res) => {
   });
 }
 
-module.exports = {getAssistantUsers, getUserInfos, updateUserinfos, deleteOneUser, getListUsers, updateUserpassword, getUserInfoswithIpAdress, deleteAllUsers, blockUser, restoreUser, getUserRole, getListofUsersWithRoleUser}
+const getUserDataForChat = async (userId) => {
+  try {
+    const userRecord = await getAuth().getUser(userId);
+    const userData = {
+      uid: userRecord.uid,
+      email: userRecord.email,
+      displayName: userRecord.displayName,
+    };
+    return userData;
+  } catch (error) {
+    console.error(`Error retrieving user data for user ID ${userId}:`, error);
+    return null;
+  }
+};
+
+module.exports = {getAssistantUsers, getUserInfos, updateUserinfos, deleteOneUser, getListUsers, updateUserpassword, getUserInfoswithIpAdress, deleteAllUsers, blockUser, restoreUser, getUserRole, getListofUsersWithRoleUser, getUserDataForChat}
