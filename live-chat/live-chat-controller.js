@@ -1,6 +1,5 @@
 const firebase = require("../config/db");
 const fireStore = firebase.firestore();
-const { getAuth } = require('firebase-admin/auth');
 const { errorResponse } = require("../config/response");
 const { getUserDataForChat } = require("../admin-functions/user-management/user-management-controller");
 
