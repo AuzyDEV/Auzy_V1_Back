@@ -3,6 +3,27 @@ const fireStore = firebase.firestore();
 const { errorResponse } = require("../config/response");
 const { getUserDataForChat } = require("../admin-functions/user-management/user-management-controller");
 
+const uploadNewMessage = async (req, res) => {
+  const currentUserId = req.params.currentUserId;
+  const assistantId = req.params.assistantId;
+  const refMessages = fireStore.collection(`chats/${currentUserId}/discussions/${assistantId}/messages`);
+  try {
+    const newMessage = {
+      idUser: req.body.idUser,
+      urlAvatar: req.body.urlAvatar,
+      username: req.body.username,
+      message: req.body.message,
+      createdAt: new Date(),
+    };
+
+    await refMessages.add(newMessage);
+    successResponse.send(res, 'Message added successfully');
+
+  } catch (error) {
+    errorResponse.send(res, error.message)
+  }
+};
+
 const addDiscussionAssUser = async (req, res) => {
   try {
     const querySnapshot = await fireStore.collection("disass").where("assId", "==", req.params.assId).where("cusId", "==", req.params.cusId).get();
@@ -106,4 +127,4 @@ const getCountMessages = async (req, res) => {
   }
 };
 
-module.exports = {getAllMessages, getCountMessagesByUserId, getCountMessages, addDiscussionAssUser, getListOfCurrentUsersId, getAllMessagesByColleactionPath, getAllUsersThatSendMsgForASpecificAssistant}
+module.exports = {uploadNewMessage, getAllMessages, getCountMessagesByUserId, getCountMessages, addDiscussionAssUser, getListOfCurrentUsersId, getAllMessagesByColleactionPath, getAllUsersThatSendMsgForASpecificAssistant}

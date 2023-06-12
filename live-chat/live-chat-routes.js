@@ -1,6 +1,7 @@
 const express = require("express");
-const { getAllMessages, getCountMessages, getCountMessagesByUserId, getAllUsersThatSendMsgForASpecificAssistant, addDiscussionAssUser, getAllMessagesByColleactionPath } = require("./live-chat-controller");
+const { getAllMessages, getCountMessagesByUserId, getAllUsersThatSendMsgForASpecificAssistant, addDiscussionAssUser, getAllMessagesByColleactionPath, uploadNewMessage } = require("./live-chat-controller");
 const router = express.Router();
+router.post("/uploadmsg/:currentUserId/:assistantId", uploadNewMessage)
 router.get("/msg/:idUser", getAllMessages);
 router.get("/nbr/:idUser", getCountMessagesByUserId);
 router.post("/addiscuAssi/:assId/:cusId", addDiscussionAssUser)

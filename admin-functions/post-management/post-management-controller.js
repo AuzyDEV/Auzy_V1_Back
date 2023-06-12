@@ -118,7 +118,7 @@ const updatePost = async (req, res) => {
     await post.update( {title: req.body.title, contenu: req.body.contenu});
     successResponse.send(res, "Record updated successfully")
   } catch (error) {
-      errorResponse.send(res, error.message)
+    errorResponse.send(res, error.message)
   }
 };
 
